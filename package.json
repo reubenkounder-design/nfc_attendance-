@@ -1,0 +1,13 @@
+{
+  "name": "sxc-faculty-nfc-terminal",
+  "version": "1.0.0",
+  "description": "Faculty NFC Attendance Terminal for St. Xavier's College, Mumbai",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["nfc", "attendance", "terminal", "sxc"],
+  "author": "",
+  "license": "ISC"
+}
