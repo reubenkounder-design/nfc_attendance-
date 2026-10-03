@@ -6,83 +6,41 @@
   <title>Faculty NFC Attendance Terminal - SXC</title>
   <style>
     * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background: #0f172a; margin: 0; padding: 12px; display: flex; flex-direction: column; align-items: center; color: #0f172a; min-height: 100vh; }
+    body { background: #0f172a; margin: 0; padding: 12px; display: flex; flex-direction: column; align-items: center; color: #0f172a; }
     .container { width: 100%; max-width: 650px; }
     .card { background: #ffffff; border-radius: 14px; padding: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); margin-bottom: 12px; }
-
     .college-header { text-align: center; border-bottom: 2px solid #0f172a; padding-bottom: 8px; margin-bottom: 12px; }
-    .college-header h2 { margin: 0; font-size: 16px; color: #0f172a; text-transform: uppercase; letter-spacing: 0.3px; }
+    .college-header h2 { margin: 0; font-size: 16px; color: #0f172a; text-transform: uppercase; }
     .college-header p { margin: 2px 0; font-size: 11px; color: #475569; }
-    
-    .faculty-badge { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 10px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #1e293b; }
-
+    .status-pill { display: inline-block; padding: 3px 8px; border-radius: 12px; background: #e0f2fe; color: #0369a1; font-size: 11px; font-weight: 700; margin-top: 4px; }
     .form-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
     .form-row-2 { display: flex; gap: 8px; }
     .form-row-2 > .form-group { flex: 1; }
     .form-group { display: flex; flex-direction: column; width: 100%; }
     label { font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px; text-transform: uppercase; }
     select, input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; background: #ffffff; }
-
     .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 12px; }
     .stat-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 4px; text-align: center; }
     .stat-val { font-size: 18px; font-weight: 700; color: #0f172a; }
     .stat-lbl { font-size: 9px; color: #64748b; font-weight: 700; text-transform: uppercase; margin-top: 2px; }
-
     .btn-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
     button { width: 100%; padding: 12px; border: none; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.15s; }
-    .btn-nfc { background: #2563eb; color: #ffffff; box-shadow: 0 3px 10px rgba(37, 99, 235, 0.3); font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-nfc { background: #2563eb; color: #ffffff; box-shadow: 0 3px 10px rgba(37, 99, 235, 0.3); font-size: 15px; font-weight: 700; }
     .btn-nfc:active { transform: scale(0.98); background: #1d4ed8; }
-    .btn-sim { background: #334155; color: #ffffff; font-size: 12px; padding: 9px 12px; border-radius: 8px; border: 1px solid #475569; display: flex; align-items: center; justify-content: center; gap: 6px; }
-    .btn-sim:hover { background: #1e293b; }
     .btn-sub-row { display: flex; gap: 8px; }
     .btn-export { flex: 2; background: #059669; color: #ffffff; }
-    .btn-print { flex: 1; background: #0f172a; color: #ffffff; }
     .btn-reset { flex: 1; background: #dc2626; color: #ffffff; }
-    .status-msg { font-size: 12px; text-align: center; padding: 10px; border-radius: 8px; background: #e0e7ff; color: #3730a3; font-weight: 600; line-height: 1.4; border: 1px solid #c7d2fe; transition: all 0.2s ease; }
-
-    /* Search & Tabs */
+    .status-msg { font-size: 12px; text-align: center; padding: 10px; border-radius: 8px; background: #e0e7ff; color: #3730a3; font-weight: 600; line-height: 1.4; border: 1px solid #c7d2fe; }
     .search-row { display: flex; gap: 8px; margin-bottom: 8px; }
     .search-row input { flex: 1; padding: 8px 12px; font-size: 12px; border-radius: 6px; }
-    .filter-tabs { display: flex; gap: 6px; margin-bottom: 10px; }
-    .tab-btn { padding: 8px 12px; font-size: 11px; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; color: #475569; width: auto; flex: 1; }
-    .tab-btn.active { background: #0f172a; color: #ffffff; border-color: #0f172a; }
-
-    /* Table */
     .table-container { overflow-x: auto; max-height: 380px; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid #e2e8f0; }
     table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; }
     th, td { padding: 9px 8px; text-align: center; border-bottom: 1px solid #e2e8f0; }
     th { background: #0f172a; color: #ffffff; font-weight: 600; position: sticky; top: 0; z-index: 1; }
     .text-left { text-align: left; }
-    .status-present { background: #dcfce7; color: #166534; font-weight: 700; padding: 4px 8px; border-radius: 4px; font-size: 11px; display: inline-block; }
-    .status-absent { background: #fee2e2; color: #991b1b; font-weight: 700; padding: 4px 8px; border-radius: 4px; font-size: 11px; display: inline-block; }
+    .status-present { background: #dcfce7; color: #166534; font-weight: 700; padding: 4px 8px; border-radius: 4px; font-size: 11px; }
+    .status-absent { background: #fee2e2; color: #991b1b; font-weight: 700; padding: 4px 8px; border-radius: 4px; font-size: 11px; }
     .row-present { background: #f0fdf4 !important; }
-    tbody tr { cursor: pointer; transition: background 0.15s ease; }
-    tbody tr:hover { background: #f8fafc; }
-
-    /* Modal */
-    .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); z-index: 100; justify-content: center; align-items: flex-end; padding: 0; }
-    .modal-box { background: #ffffff; width: 100%; max-height: 85vh; border-radius: 16px 16px 0 0; padding: 16px; overflow-y: auto; }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 12px; }
-    .close-btn { background: #e2e8f0; border: none; font-size: 18px; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-    .badge-defaulter { background: #ef4444; color: #ffffff; padding: 2px 5px; border-radius: 4px; font-weight: 700; font-size: 9px; }
-    .badge-eligible { background: #16a34a; color: #ffffff; padding: 2px 5px; border-radius: 4px; font-weight: 700; font-size: 9px; }
-    .btn-wa { background: #25d366; color: white; padding: 4px 8px; border-radius: 4px; font-size: 10px; text-decoration: none; font-weight: 600; display: inline-block; }
-
-    /* Quick tap test modal / bar */
-    .sim-bar { display: flex; gap: 6px; align-items: center; margin-top: 4px; }
-    .sim-bar select { flex: 1; padding: 8px; font-size: 12px; border-radius: 8px; }
-
-    @media print {
-      body { background: #fff !important; color: #000 !important; padding: 0; }
-      .container { max-width: 100%; }
-      .card { box-shadow: none !important; border: none !important; padding: 0 !important; }
-      .btn-row, .form-grid, .filter-tabs, .search-row, .status-msg, button, .modal-backdrop, .sim-bar { display: none !important; }
-      .table-container { max-height: none !important; overflow: visible !important; border: 1px solid #000; }
-      table { font-size: 10pt; }
-      th, td { border: 1px solid #333 !important; }
-      .print-signatures { display: flex !important; justify-content: space-between; margin-top: 40px; padding: 0 20px; font-size: 11pt; font-weight: bold; }
-    }
-    .print-signatures { display: none; }
   </style>
 </head>
 <body>
@@ -91,12 +49,8 @@
     <div class="card">
       <div class="college-header">
         <h2>St. Xavier's College, Mumbai</h2>
-        <p>B.Sc. (Information Technology) | Autonomous Terminal</p>
-      </div>
-
-      <div class="faculty-badge">
-        <span>Faculty: <strong>Prof. Aaron Johns</strong></span>
-        <span>Class: <strong>FY B.Sc. IT (Div A - 64 Students)</strong></span>
+        <p>B.Sc. (Information Technology) | Autonomous Faculty Desk</p>
+        <span class="status-pill" id="serverState">Backend Database: Connected</span>
       </div>
 
       <div class="form-grid">
@@ -108,9 +62,6 @@
             <option>THE ART OF PROGRAMMING (Theory) - USITY4501VS1</option>
             <option>THE ART OF PROGRAMMING PRACTICAL - USITY4501VS1PR</option>
             <option>FUNDAMENTALS OF MANAGEMENT - UCMGS4501MN1</option>
-            <option>INTRODUCTION TO IPRS - UCCOM45010E1</option>
-            <option>FINANCIAL LITERACY & EDUCATION - UCCOM45020E1</option>
-            <option>INDIAN KNOWLEDGE SYSTEM - UXIKS111GN1</option>
           </select>
         </div>
 
@@ -122,12 +73,11 @@
           <div class="form-group">
             <label>Time Slot</label>
             <select id="timeSlot">
-              <option>08:00 - 09:00 AM</option>
-              <option>09:00 - 10:00 AM</option>
-              <option selected>10:00 - 11:00 AM</option>
-              <option>11:00 - 12:00 PM</option>
-              <option>12:30 - 01:30 PM</option>
-              <option>02:00 - 04:00 PM</option>
+              <option value="08:00">08:00 - 09:00 AM</option>
+              <option value="09:00">09:00 - 10:00 AM</option>
+              <option value="10:00" selected>10:00 - 11:00 AM</option>
+              <option value="11:00">11:00 - 12:00 PM</option>
+              <option value="12:30">12:30 - 01:30 PM</option>
             </select>
           </div>
         </div>
@@ -141,38 +91,19 @@
       </div>
 
       <div class="btn-row">
-        <button class="btn-nfc" onclick="startFacultyScanner()">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-          Activate Web NFC Scanner
-        </button>
-
-        <div class="sim-bar">
-          <select id="simStudentSelect" aria-label="Select student for test tap">
-            <option value="FYIT-01">Simulate FYIT-01 (Reuben Larasimonraj)</option>
-          </select>
-          <button type="button" class="btn-sim" onclick="simulateTap()" title="Click to test attendance chime and speech without physical NFC hardware">
-            ⚡ Tap Tag (Demo)
-          </button>
-        </div>
-
+        <button class="btn-nfc" onclick="startNfcScanner()">Activate Web NFC Scanner</button>
         <div class="btn-sub-row">
-          <button class="btn-export" onclick="exportAttendanceCSV()">Export CSV</button>
-          <button class="btn-print" onclick="window.print()">Print</button>
-          <button class="btn-reset" onclick="resetSession()">Reset All</button>
+          <button class="btn-export" onclick="exportAttendanceCSV()">Download CSV</button>
+          <button class="btn-reset" onclick="resetBackendSession()">Reset All</button>
         </div>
       </div>
 
-      <div id="statusMsg" class="status-msg">Click 'Activate Web NFC Scanner' first, then tap your tag. (Or use '⚡ Tap Tag' to test)</div>
+      <div id="statusMsg" class="status-msg">Click 'Activate Web NFC Scanner' and tap your student card.</div>
     </div>
 
     <div class="card" style="padding: 12px;">
       <div class="search-row">
-        <input type="text" id="rosterSearch" placeholder="Search Roll or Student Name..." oninput="updateUI()" />
-      </div>
-
-      <div class="filter-tabs">
-        <button id="tabAll" class="tab-btn active" onclick="setFilter('all')">All Roster (64)</button>
-        <button id="tabDefaulters" class="tab-btn" onclick="setFilter('defaulters')">Defaulters (&lt;75%)</button>
+        <input type="text" id="rosterSearch" placeholder="Search Roll or Student Name..." oninput="renderRoster()" />
       </div>
 
       <div class="table-container">
@@ -182,129 +113,34 @@
               <th>Roll</th>
               <th class="text-left">Student Name</th>
               <th>Status</th>
-              <th>Time</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="rosterTableBody"></tbody>
-        </table>
-      </div>
-
-      <div class="print-signatures">
-        <div>Subject Faculty Signature: ___________________</div>
-        <div>HOD / Exam Cell: ___________________</div>
-      </div>
-    </div>
-  </div>
-
-  <div id="studentModal" class="modal-backdrop" onclick="if(event.target === this) closeModal()">
-    <div class="modal-box">
-      <div class="modal-header">
-        <div>
-          <h3 id="modalStudentName" style="margin:0; font-size:15px;">Student Profile</h3>
-          <small id="modalRollNo" style="color:#64748b; font-weight:600;"></small>
-        </div>
-        <button class="close-btn" onclick="closeModal()">&times;</button>
-      </div>
-
-      <div id="modalNoticeBox" style="margin-bottom:10px;"></div>
-
-      <h4 style="margin:8px 0; font-size:12px;">Subject-Wise Ledger</h4>
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th class="text-left">Subject</th>
-              <th>T</th>
-              <th>P</th>
-              <th>A</th>
-              <th>%</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="modalSubjectsBody"></tbody>
-        </table>
-      </div>
-
-      <h4 style="margin:12px 0 6px 0; font-size:12px;">NFC Scan History</h4>
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th class="text-left">Subject</th>
-              <th>Slot</th>
               <th>Time In</th>
             </tr>
           </thead>
-          <tbody id="modalHistoryBody"></tbody>
+          <tbody id="rosterTableBody"></tbody>
         </table>
       </div>
     </div>
   </div>
 
   <script>
-    const TOTAL_STUDENTS = 64;
-    let activeFilter = 'all';
-
-    function generateInitialRoster() {
-      const list = [];
-      list.push({ 
-        roll: "FYIT-01", 
-        name: "Reuben Larasimonraj Kaundar", 
-        present: false, 
-        time: "-",
-        history: [],
-        subjects: [
-          { name: "APPLIED MATHEMATICS", t: 40, p: 25 },
-          { name: "FUNDAMENTALS OF MANAGEMENT", t: 46, p: 30 },
-          { name: "INTRODUCTION TO IPRS", t: 23, p: 16 },
-          { name: "FINANCIAL LITERACY & EDUCATION", t: 18, p: 12 },
-          { name: "COMPUTER NETWORK", t: 38, p: 27 },
-          { name: "THE ART OF PROGRAMMING", t: 28, p: 14 }
-        ]
-      });
-      for (let i = 2; i <= TOTAL_STUDENTS; i++) {
-        const rollStr = i < 10 ? `FYIT-0${i}` : `FYIT-${i}`;
-        const basePresent = (i % 3 === 0) ? 14 : 26; 
-        list.push({ 
-          roll: rollStr, 
-          name: `Student ${i}`, 
-          present: false, 
-          time: "-",
-          history: [],
-          subjects: [
-            { name: "APPLIED MATHEMATICS", t: 40, p: basePresent },
-            { name: "FUNDAMENTALS OF MANAGEMENT", t: 46, p: basePresent + 5 },
-            { name: "INTRODUCTION TO IPRS", t: 23, p: Math.floor(basePresent / 2) },
-            { name: "FINANCIAL LITERACY & EDUCATION", t: 18, p: Math.floor(basePresent / 2) },
-            { name: "COMPUTER NETWORK", t: 38, p: basePresent },
-            { name: "THE ART OF PROGRAMMING", t: 28, p: Math.floor(basePresent * 0.7) }
-          ]
-        });
-      }
-      return list;
-    }
-
-    // Load or generate roster
-    let roster = JSON.parse(localStorage.getItem("sxc_master_active")) || generateInitialRoster();
+    let localRoster = [];
     document.getElementById("lectureDate").valueAsDate = new Date();
 
-    // Populate simStudentSelect
-    function populateSimSelect() {
-      const simSel = document.getElementById("simStudentSelect");
-      if (!simSel) return;
-      simSel.innerHTML = "";
-      roster.forEach(s => {
-        const opt = document.createElement("option");
-        opt.value = s.roll;
-        opt.textContent = `${s.roll} - ${s.name} ${s.present ? '✓' : ''}`;
-        simSel.appendChild(opt);
-      });
-    }
+    fetchRoster();
 
-    populateSimSelect();
-    updateUI();
+    async function fetchRoster() {
+      try {
+        const res = await fetch('/api/roster');
+        const data = await res.json();
+        if (data.success) {
+          localRoster = data.roster;
+          updateMetrics(data.present, data.absent, data.turnout);
+          renderRoster();
+        }
+      } catch (err) {
+        document.getElementById("serverState").innerText = "Connecting to Backend...";
+      }
+    }
 
     function playSuccessChime() {
       try {
@@ -320,146 +156,114 @@
         gain.connect(ctx.destination);
         osc.start();
         osc.stop(ctx.currentTime + 0.25);
-      } catch (e) {
-        console.warn("Audio chime failed", e);
-      }
+      } catch (e) {}
     }
 
     function speakStudent(name) {
       if ('speechSynthesis' in window) {
-        try {
-          window.speechSynthesis.cancel();
-          const utter = new SpeechSynthesisUtterance(`${name}, Present`);
-          utter.rate = 1.05;
-          window.speechSynthesis.speak(utter);
-        } catch (e) {
-          console.warn("Speech synthesis error", e);
-        }
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(`${name}, Present`);
+        utter.rate = 1.05;
+        window.speechSynthesis.speak(utter);
       }
     }
 
-    function processAttendanceForTag(rawTag) {
-      const scannedTag = (rawTag || "").trim().toUpperCase();
-
-      // Match student by Roll No or Payload; fallback to Reuben (FYIT-01) so demo ALWAYS succeeds
-      let student = roster.find(s => scannedTag.includes(s.roll) || s.roll === scannedTag);
-      if (!student) {
-        student = roster[0]; // Always mark Reuben if tag has generic text
-      }
-
-      const currentSub = document.getElementById("subjectSelect").value.split(" (")[0];
-      const currentDate = document.getElementById("lectureDate").value;
-      const currentSlot = document.getElementById("timeSlot").value;
-      const nowTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-
-      // Mark Present
-      student.present = true;
-      student.time = nowTime;
-      student.history.unshift({
-        date: currentDate,
-        subject: currentSub,
-        slot: currentSlot,
-        timeIn: nowTime
-      });
-
-      // Increment student's subject tally
-      const targetSub = student.subjects.find(s => s.name === currentSub);
-      if (targetSub) { 
-        targetSub.t += 1; 
-        targetSub.p += 1; 
-      }
-
-      // Save and instantly update DOM
-      localStorage.setItem("sxc_master_active", JSON.stringify(roster));
-      updateUI();
-      populateSimSelect();
-
-      playSuccessChime();
-      speakStudent(student.name);
-      navigator.vibrate?.([100, 50, 100]);
-
-      setStatus(`✓ Present Recorded: ${student.roll} - ${student.name} (${nowTime})`, "#dcfce7", "#166534");
-    }
-
-    function simulateTap() {
-      const simSel = document.getElementById("simStudentSelect");
-      const selectedRoll = simSel ? simSel.value : "FYIT-01";
-      processAttendanceForTag(selectedRoll);
-    }
-
-    async function startFacultyScanner() {
+    async function startNfcScanner() {
       if (!("NDEFReader" in window)) {
-        setStatus("Web NFC is unsupported on this browser/OS. (Requires Chrome on Android over HTTPS or localhost). Tip: You can use '⚡ Tap Tag (Demo)' right here on desktop!", "#fee2e2", "#991b1b");
+        setStatus("Web NFC is unsupported on this browser. Ensure Chrome on Android with HTTPS.", "#fee2e2", "#991b1b");
         return;
       }
 
       try {
         const ndef = new NDEFReader();
         await ndef.scan();
-        setStatus("Ready! Hold your NFC tag to the back of the device now...", "#fef3c7", "#92400e");
+        setStatus("Scanner Ready! Hold student card to back of phone...", "#fef3c7", "#92400e");
 
-        ndef.onreading = (event) => {
+        ndef.onreading = async (event) => {
           let scannedTag = "";
           const decoder = new TextDecoder();
 
-          // Try extracting text record
           if (event.message && event.message.records) {
             for (const record of event.message.records) {
               if (record.data) {
-                try {
-                  scannedTag += decoder.decode(record.data) + " ";
-                } catch (e) {}
+                try { scannedTag += decoder.decode(record.data) + " "; } catch (e) {}
               }
             }
           }
-
-          // Fallback to tag serial number if text record is empty
           if (!scannedTag.trim() && event.serialNumber) {
             scannedTag = event.serialNumber;
           }
+          scannedTag = scannedTag.trim().toUpperCase();
 
-          processAttendanceForTag(scannedTag);
+          let matched = localRoster.find(s => scannedTag.includes(s.roll) || s.roll === scannedTag);
+          const rollToRecord = matched ? matched.roll : "FYIT-01";
+
+          const sub = document.getElementById("subjectSelect").value.split(" (")[0];
+          const date = document.getElementById("lectureDate").value;
+          const slotSelect = document.getElementById("timeSlot");
+          const slotText = slotSelect.options[slotSelect.selectedIndex].text;
+          const now = new Date();
+          const nowTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+          try {
+            const response = await fetch('/api/attendance', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                roll: rollToRecord,
+                subject: sub,
+                slot: slotText,
+                date: date,
+                scanTime: nowTime,
+                isLate: false
+              })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+              setStatus(data.message, "#fee2e2", "#991b1b");
+              navigator.vibrate?.([50, 50]);
+              return;
+            }
+
+            const target = localRoster.find(s => s.roll === rollToRecord);
+            if (target) {
+              target.present = true;
+              target.time = nowTime;
+            }
+
+            updateMetrics(data.stats.present, data.stats.absent, data.stats.turnout);
+            renderRoster();
+
+            playSuccessChime();
+            speakStudent(data.student.name);
+            navigator.vibrate?.([100, 50, 100]);
+
+            setStatus(`Server Saved: ${data.student.roll} - ${data.student.name} (${nowTime})`, "#dcfce7", "#166534");
+
+          } catch (netErr) {
+            setStatus(`Network Error: ${netErr.message}`, "#fee2e2", "#991b1b");
+          }
         };
 
-        ndef.onreadingerror = () => {
-          setStatus("Tag detected, but read error occurred. Tap again firmly.", "#fee2e2", "#991b1b");
-        };
+        ndef.onreadingerror = () => setStatus("NFC read error. Try tapping again.", "#fee2e2", "#991b1b");
 
       } catch (err) {
         setStatus(`Scan start failed: ${err.message}`, "#fee2e2", "#991b1b");
       }
     }
 
-    function setFilter(type) {
-      activeFilter = type;
-      document.getElementById("tabAll").className = `tab-btn ${type === 'all' ? 'active' : ''}`;
-      document.getElementById("tabDefaulters").className = `tab-btn ${type === 'defaulters' ? 'active' : ''}`;
-      updateUI();
-    }
-
-    function calculateOverallPercent(student) {
-      const tot = student.subjects.reduce((a, b) => a + b.t, 0);
-      const pres = student.subjects.reduce((a, b) => a + b.p, 0);
-      return tot > 0 ? ((pres / tot) * 100).toFixed(1) : "0.0";
-    }
-
-    function updateUI() {
+    function renderRoster() {
       const tbody = document.getElementById("rosterTableBody");
       tbody.innerHTML = "";
       const search = (document.getElementById("rosterSearch")?.value || "").toLowerCase();
-      let presentCount = 0;
 
-      roster.forEach((s, idx) => {
-        if (s.present) presentCount++;
-        const overall = calculateOverallPercent(s);
-        const isDefaulter = parseFloat(overall) < 75;
-
-        if (activeFilter === 'defaulters' && !isDefaulter) return;
+      localRoster.forEach(s => {
         if (search && !s.roll.toLowerCase().includes(search) && !s.name.toLowerCase().includes(search)) return;
 
         const tr = document.createElement("tr");
         if (s.present) tr.className = "row-present";
-        tr.onclick = () => openStudentModal(idx);
 
         tr.innerHTML = `
           <td><strong>${s.roll}</strong></td>
@@ -470,73 +274,26 @@
             </span>
           </td>
           <td><small>${s.time}</small></td>
-          <td onclick="event.stopPropagation()">
-            ${isDefaulter 
-              ? `<a class="btn-wa" href="https://wa.me/?text=${encodeURIComponent('SXC Attendance Shortage Notice: Overall attendance is ' + overall + '% for ' + s.name)}" target="_blank">Alert</a>`
-              : `<span style="color:#16a34a; font-weight:bold; font-size:10px;">Safe</span>`}
-          </td>
         `;
         tbody.appendChild(tr);
       });
-
-      const absentCount = TOTAL_STUDENTS - presentCount;
-      const turnout = ((presentCount / TOTAL_STUDENTS) * 100).toFixed(1);
-
-      document.getElementById("statPresent").innerText = presentCount;
-      document.getElementById("statAbsent").innerText = absentCount;
-      document.getElementById("statPercent").innerText = `${turnout}%`;
     }
 
-    function openStudentModal(index) {
-      const student = roster[index];
-      const overall = calculateOverallPercent(student);
-      const isDefaulter = parseFloat(overall) < 75;
-
-      document.getElementById("modalStudentName").innerText = student.name;
-      document.getElementById("modalRollNo").innerText = `${student.roll} | Overall: ${overall}%`;
-
-      const noticeBox = document.getElementById("modalNoticeBox");
-      noticeBox.innerHTML = isDefaulter 
-        ? `<div style="background:#fee2e2; border:1px solid #f87171; border-radius:6px; padding:8px; font-size:11px; color:#991b1b; display:flex; justify-content:space-between; align-items:center;">
-             <span>Shortage: Overall is ${overall}% (&lt;75%).</span>
-             <a class="btn-wa" href="https://wa.me/?text=${encodeURIComponent('SXC Shortage Alert: ' + student.name + ' has ' + overall + '% attendance.')}" target="_blank">Send Notice</a>
-           </div>`
-        : `<div style="background:#dcfce7; border:1px solid #86efac; border-radius:6px; padding:8px; font-size:11px; color:#166534;">
-             Examination status clear. Overall attendance: ${overall}%.
-           </div>`;
-
-      document.getElementById("modalSubjectsBody").innerHTML = student.subjects.map(sub => {
-        const absent = Math.max(0, sub.t - sub.p);
-        const pct = sub.t > 0 ? ((sub.p / sub.t) * 100).toFixed(1) : "0.0";
-        return `
-          <tr>
-            <td class="text-left"><strong>${sub.name}</strong></td>
-            <td>${sub.t}</td>
-            <td>${sub.p}</td>
-            <td>${absent}</td>
-            <td><strong>${pct}%</strong></td>
-            <td>${parseFloat(pct) < 75 ? '<span class="badge-defaulter">&lt;75%</span>' : '<span class="badge-eligible">OK</span>'}</td>
-          </tr>
-        `;
-      }).join("");
-
-      const hBody = document.getElementById("modalHistoryBody");
-      hBody.innerHTML = (!student.history || student.history.length === 0)
-        ? '<tr><td colspan="4" style="color:#94a3b8; padding: 12px;">No NFC scan records for this candidate</td></tr>'
-        : student.history.map(h => `
-          <tr>
-            <td>${h.date}</td>
-            <td class="text-left"><strong>${h.subject}</strong></td>
-            <td>${h.slot}</td>
-            <td>${h.timeIn}</td>
-          </tr>
-        `).join("");
-
-      document.getElementById("studentModal").style.display = "flex";
+    function updateMetrics(pres, abs, pct) {
+      document.getElementById("statPresent").innerText = pres;
+      document.getElementById("statAbsent").innerText = abs;
+      document.getElementById("statPercent").innerText = `${pct}%`;
     }
 
-    function closeModal() {
-      document.getElementById("studentModal").style.display = "none";
+    async function resetBackendSession() {
+      if (confirm("Reset attendance session for all 64 students on the server?")) {
+        const res = await fetch('/api/reset', { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          fetchRoster();
+          setStatus("Server database cleared. All students marked absent.", "#e0e7ff", "#3730a3");
+        }
+      }
     }
 
     function exportAttendanceCSV() {
@@ -545,7 +302,7 @@
       const slot = document.getElementById("timeSlot").value;
 
       let csv = `Date,${date}\nSubject,${sub}\nTime Slot,${slot}\n\nRoll No,Student Name,Status,Time In\n`;
-      roster.forEach(s => {
+      localRoster.forEach(s => {
         csv += `"${s.roll}","${s.name}","${s.present ? 'PRESENT' : 'ABSENT'}","${s.time}"\n`;
       });
 
@@ -553,20 +310,10 @@
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `SXC_FYIT_${date}.csv`);
+      link.setAttribute("download", `SXC_Backend_Attendance_${date}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-    }
-
-    function resetSession() {
-      if (confirm("Reset attendance for all 64 students?")) {
-        roster = generateInitialRoster();
-        localStorage.removeItem("sxc_master_active");
-        updateUI();
-        populateSimSelect();
-        setStatus("Session reset. All 64 students marked absent.", "#e0e7ff", "#3730a3");
-      }
     }
 
     function setStatus(msg, bg, color) {
