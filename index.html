@@ -3,36 +3,41 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Faculty NFC Attendance Terminal - SXC</title>
+  <title>Faculty NFC Terminal - SXC</title>
   <style>
     * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background: #0f172a; margin: 0; padding: 12px; display: flex; flex-direction: column; align-items: center; color: #0f172a; }
     .container { width: 100%; max-width: 650px; }
     .card { background: #ffffff; border-radius: 14px; padding: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); margin-bottom: 12px; }
+
     .college-header { text-align: center; border-bottom: 2px solid #0f172a; padding-bottom: 8px; margin-bottom: 12px; }
     .college-header h2 { margin: 0; font-size: 16px; color: #0f172a; text-transform: uppercase; }
     .college-header p { margin: 2px 0; font-size: 11px; color: #475569; }
+    
     .status-pill { display: inline-block; padding: 3px 8px; border-radius: 12px; background: #e0f2fe; color: #0369a1; font-size: 11px; font-weight: 700; margin-top: 4px; }
+
     .form-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
     .form-row-2 { display: flex; gap: 8px; }
     .form-row-2 > .form-group { flex: 1; }
     .form-group { display: flex; flex-direction: column; width: 100%; }
     label { font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px; text-transform: uppercase; }
     select, input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; background: #ffffff; }
+
     .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 12px; }
     .stat-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 4px; text-align: center; }
     .stat-val { font-size: 18px; font-weight: 700; color: #0f172a; }
     .stat-lbl { font-size: 9px; color: #64748b; font-weight: 700; text-transform: uppercase; margin-top: 2px; }
+
     .btn-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
     button { width: 100%; padding: 12px; border: none; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.15s; }
     .btn-nfc { background: #2563eb; color: #ffffff; box-shadow: 0 3px 10px rgba(37, 99, 235, 0.3); font-size: 15px; font-weight: 700; }
-    .btn-nfc:active { transform: scale(0.98); background: #1d4ed8; }
+    .btn-save { background: #059669; color: #ffffff; font-size: 14px; font-weight: 700; box-shadow: 0 3px 10px rgba(5, 150, 105, 0.25); }
     .btn-sub-row { display: flex; gap: 8px; }
-    .btn-export { flex: 2; background: #059669; color: #ffffff; }
+    .btn-export { flex: 2; background: #475569; color: #ffffff; }
     .btn-reset { flex: 1; background: #dc2626; color: #ffffff; }
+    
     .status-msg { font-size: 12px; text-align: center; padding: 10px; border-radius: 8px; background: #e0e7ff; color: #3730a3; font-weight: 600; line-height: 1.4; border: 1px solid #c7d2fe; }
-    .search-row { display: flex; gap: 8px; margin-bottom: 8px; }
-    .search-row input { flex: 1; padding: 8px 12px; font-size: 12px; border-radius: 6px; }
+
     .table-container { overflow-x: auto; max-height: 380px; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid #e2e8f0; }
     table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; }
     th, td { padding: 9px 8px; text-align: center; border-bottom: 1px solid #e2e8f0; }
@@ -50,7 +55,7 @@
       <div class="college-header">
         <h2>St. Xavier's College, Mumbai</h2>
         <p>B.Sc. (Information Technology) | Autonomous Faculty Desk</p>
-        <span class="status-pill" id="serverState">Backend Database: Connected</span>
+        <span class="status-pill" id="serverState">Ledger Engine: Active</span>
       </div>
 
       <div class="form-grid">
@@ -73,18 +78,18 @@
           <div class="form-group">
             <label>Time Slot</label>
             <select id="timeSlot">
-              <option value="08:00">08:00 - 09:00 AM</option>
-              <option value="09:00">09:00 - 10:00 AM</option>
-              <option value="10:00" selected>10:00 - 11:00 AM</option>
-              <option value="11:00">11:00 - 12:00 PM</option>
-              <option value="12:30">12:30 - 01:30 PM</option>
+              <option>08:00 - 09:00 AM</option>
+              <option>09:00 - 10:00 AM</option>
+              <option selected>10:00 - 11:00 AM</option>
+              <option>11:00 - 12:00 PM</option>
+              <option>12:30 - 01:30 PM</option>
             </select>
           </div>
         </div>
       </div>
 
       <div class="stats-grid">
-        <div class="stat-box"><div class="stat-val" id="statStrength">64</div><div class="stat-lbl">Total</div></div>
+        <div class="stat-box"><div class="stat-val" id="statStrength">64</div><div class="stat-lbl">Class</div></div>
         <div class="stat-box"><div class="stat-val" id="statPresent" style="color:#16a34a;">0</div><div class="stat-lbl">Present</div></div>
         <div class="stat-box"><div class="stat-val" id="statAbsent" style="color:#dc2626;">64</div><div class="stat-lbl">Absent</div></div>
         <div class="stat-box"><div class="stat-val" id="statPercent">0%</div><div class="stat-lbl">Turnout</div></div>
@@ -92,28 +97,27 @@
 
       <div class="btn-row">
         <button class="btn-nfc" onclick="startNfcScanner()">Activate Web NFC Scanner</button>
+        <button class="btn-save" onclick="saveSessionToLedger()">Save & Commit Attendance to Database</button>
         <div class="btn-sub-row">
-          <button class="btn-export" onclick="exportAttendanceCSV()">Download CSV</button>
-          <button class="btn-reset" onclick="resetBackendSession()">Reset All</button>
+          <button class="btn-export" onclick="exportAttendanceCSV()">Export CSV</button>
+          <button class="btn-reset" onclick="resetAll()">Reset All</button>
         </div>
       </div>
 
-      <div id="statusMsg" class="status-msg">Click 'Activate Web NFC Scanner' and tap your student card.</div>
+      <div id="statusMsg" class="status-msg">Scan student tags, then click 'Save & Commit Attendance' to permanently update records.</div>
     </div>
 
     <div class="card" style="padding: 12px;">
-      <div class="search-row">
-        <input type="text" id="rosterSearch" placeholder="Search Roll or Student Name..." oninput="renderRoster()" />
-      </div>
-
+      <h3 style="margin: 0 0 10px 0; font-size: 13px;">Class Ledger & Attendance Percentage</h3>
       <div class="table-container">
         <table>
           <thead>
             <tr>
               <th>Roll</th>
               <th class="text-left">Student Name</th>
-              <th>Status</th>
-              <th>Time In</th>
+              <th>Current Tap</th>
+              <th>Attended / Total</th>
+              <th>Aggregate %</th>
             </tr>
           </thead>
           <tbody id="rosterTableBody"></tbody>
@@ -123,9 +127,8 @@
   </div>
 
   <script>
-    let localRoster = [];
+    let roster = [];
     document.getElementById("lectureDate").valueAsDate = new Date();
-
     fetchRoster();
 
     async function fetchRoster() {
@@ -133,12 +136,12 @@
         const res = await fetch('/api/roster');
         const data = await res.json();
         if (data.success) {
-          localRoster = data.roster;
+          roster = data.roster;
           updateMetrics(data.present, data.absent, data.turnout);
           renderRoster();
         }
-      } catch (err) {
-        document.getElementById("serverState").innerText = "Connecting to Backend...";
+      } catch (e) {
+        document.getElementById("serverState").innerText = "Offline Mode";
       }
     }
 
@@ -149,13 +152,12 @@
         const gain = ctx.createGain();
         osc.type = "sine";
         osc.frequency.setValueAtTime(880, ctx.currentTime);
-        osc.frequency.setValueAtTime(1174.66, ctx.currentTime + 0.08);
         gain.gain.setValueAtTime(0.2, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
         osc.connect(gain);
         gain.connect(ctx.destination);
         osc.start();
-        osc.stop(ctx.currentTime + 0.25);
+        osc.stop(ctx.currentTime + 0.2);
       } catch (e) {}
     }
 
@@ -170,110 +172,109 @@
 
     async function startNfcScanner() {
       if (!("NDEFReader" in window)) {
-        setStatus("Web NFC is unsupported on this browser. Ensure Chrome on Android with HTTPS.", "#fee2e2", "#991b1b");
+        setStatus("Web NFC requires Chrome on Android over HTTPS.", "#fee2e2", "#991b1b");
         return;
       }
 
       try {
         const ndef = new NDEFReader();
         await ndef.scan();
-        setStatus("Scanner Ready! Hold student card to back of phone...", "#fef3c7", "#92400e");
+        setStatus("Ready! Hold student card to back of Android phone...", "#fef3c7", "#92400e");
 
         ndef.onreading = async (event) => {
           let scannedTag = "";
           const decoder = new TextDecoder();
-
-          if (event.message && event.message.records) {
-            for (const record of event.message.records) {
-              if (record.data) {
-                try { scannedTag += decoder.decode(record.data) + " "; } catch (e) {}
-              }
+          if (event.message?.records) {
+            for (const r of event.message.records) {
+              if (r.data) scannedTag += decoder.decode(r.data) + " ";
             }
           }
-          if (!scannedTag.trim() && event.serialNumber) {
-            scannedTag = event.serialNumber;
-          }
+          if (!scannedTag.trim() && event.serialNumber) scannedTag = event.serialNumber;
           scannedTag = scannedTag.trim().toUpperCase();
 
-          let matched = localRoster.find(s => scannedTag.includes(s.roll) || s.roll === scannedTag);
-          const rollToRecord = matched ? matched.roll : "FYIT-01";
-
-          const sub = document.getElementById("subjectSelect").value.split(" (")[0];
-          const date = document.getElementById("lectureDate").value;
-          const slotSelect = document.getElementById("timeSlot");
-          const slotText = slotSelect.options[slotSelect.selectedIndex].text;
-          const now = new Date();
-          const nowTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+          let match = roster.find(s => scannedTag.includes(s.roll) || s.roll === scannedTag) || roster[0];
 
           try {
-            const response = await fetch('/api/attendance', {
+            const res = await fetch('/api/attendance', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                roll: rollToRecord,
-                subject: sub,
-                slot: slotText,
-                date: date,
-                scanTime: nowTime,
-                isLate: false
-              })
+              body: JSON.stringify({ roll: match.roll })
             });
+            const data = await res.json();
 
-            const data = await response.json();
-
-            if (!response.ok) {
+            if (!res.ok) {
               setStatus(data.message, "#fee2e2", "#991b1b");
-              navigator.vibrate?.([50, 50]);
               return;
             }
 
-            const target = localRoster.find(s => s.roll === rollToRecord);
-            if (target) {
-              target.present = true;
-              target.time = nowTime;
-            }
-
+            match.present = true;
+            match.time = data.student.time;
             updateMetrics(data.stats.present, data.stats.absent, data.stats.turnout);
             renderRoster();
-
             playSuccessChime();
             speakStudent(data.student.name);
-            navigator.vibrate?.([100, 50, 100]);
+            setStatus(`Tap Verified: ${match.roll} - ${match.name}`, "#dcfce7", "#166534");
 
-            setStatus(`Server Saved: ${data.student.roll} - ${data.student.name} (${nowTime})`, "#dcfce7", "#166534");
-
-          } catch (netErr) {
-            setStatus(`Network Error: ${netErr.message}`, "#fee2e2", "#991b1b");
+          } catch (err) {
+            setStatus(`Network error: ${err.message}`, "#fee2e2", "#991b1b");
           }
         };
-
-        ndef.onreadingerror = () => setStatus("NFC read error. Try tapping again.", "#fee2e2", "#991b1b");
-
       } catch (err) {
         setStatus(`Scan start failed: ${err.message}`, "#fee2e2", "#991b1b");
+      }
+    }
+
+    async function saveSessionToLedger() {
+      const subject = document.getElementById("subjectSelect").value;
+      const date = document.getElementById("lectureDate").value;
+      const slot = document.getElementById("timeSlot").value;
+
+      const presentCount = roster.filter(s => s.present).length;
+      if (!confirm(`Save lecture attendance for ${subject}?\n\nPresent: ${presentCount} / 64 students.`)) {
+        return;
+      }
+
+      setStatus("Saving session to backend database...", "#e0e7ff", "#3730a3");
+
+      try {
+        const res = await fetch('/api/save-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ subject, date, slot })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          roster = data.roster;
+          updateMetrics(0, 64, "0.0");
+          renderRoster();
+          setStatus(`Lecture committed! Individual student records and percentages updated.`, "#dcfce7", "#166534");
+        } else {
+          setStatus("Failed to save session.", "#fee2e2", "#991b1b");
+        }
+      } catch (err) {
+        setStatus(`Error saving session: ${err.message}`, "#fee2e2", "#991b1b");
       }
     }
 
     function renderRoster() {
       const tbody = document.getElementById("rosterTableBody");
       tbody.innerHTML = "";
-      const search = (document.getElementById("rosterSearch")?.value || "").toLowerCase();
 
-      localRoster.forEach(s => {
-        if (search && !s.roll.toLowerCase().includes(search) && !s.name.toLowerCase().includes(search)) return;
-
+      roster.forEach(s => {
         const tr = document.createElement("tr");
         if (s.present) tr.className = "row-present";
+
+        const pct = s.attendancePercentage || 0;
+        const pctColor = pct < 75 ? "#dc2626" : "#166534";
 
         tr.innerHTML = `
           <td><strong>${s.roll}</strong></td>
           <td class="text-left" style="color:#2563eb; font-weight:600;">${s.name}</td>
-          <td>
-            <span class="${s.present ? 'status-present' : 'status-absent'}">
-              ${s.present ? 'PRESENT' : 'ABSENT'}
-            </span>
-          </td>
-          <td><small>${s.time}</small></td>
+          <td><span class="${s.present ? 'status-present' : 'status-absent'}">${s.present ? 'PRESENT' : 'ABSENT'}</span></td>
+          <td><strong>${s.lecturesAttended || 0}</strong> / ${s.totalLectures || 0}</td>
+          <td style="color:${pctColor}; font-weight:700;">${pct}%</td>
         `;
         tbody.appendChild(tr);
       });
@@ -285,13 +286,13 @@
       document.getElementById("statPercent").innerText = `${pct}%`;
     }
 
-    async function resetBackendSession() {
-      if (confirm("Reset attendance session for all 64 students on the server?")) {
+    async function resetAll() {
+      if (confirm("Wipe entire database and reset all student histories to zero?")) {
         const res = await fetch('/api/reset', { method: 'POST' });
         const data = await res.json();
         if (data.success) {
           fetchRoster();
-          setStatus("Server database cleared. All students marked absent.", "#e0e7ff", "#3730a3");
+          setStatus("Database reset. All statistics cleared.", "#e0e7ff", "#3730a3");
         }
       }
     }
@@ -299,18 +300,15 @@
     function exportAttendanceCSV() {
       const sub = document.getElementById("subjectSelect").value;
       const date = document.getElementById("lectureDate").value;
-      const slot = document.getElementById("timeSlot").value;
-
-      let csv = `Date,${date}\nSubject,${sub}\nTime Slot,${slot}\n\nRoll No,Student Name,Status,Time In\n`;
-      localRoster.forEach(s => {
-        csv += `"${s.roll}","${s.name}","${s.present ? 'PRESENT' : 'ABSENT'}","${s.time}"\n`;
+      let csv = `Date,${date}\nSubject,${sub}\n\nRoll No,Student Name,Lectures Attended,Total Lectures,Percentage\n`;
+      roster.forEach(s => {
+        csv += `"${s.roll}","${s.name}",${s.lecturesAttended || 0},${s.totalLectures || 0},${s.attendancePercentage || 0}%\n`;
       });
-
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `SXC_Backend_Attendance_${date}.csv`);
+      link.setAttribute("download", `SXC_Attendance_Ledger_${date}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
