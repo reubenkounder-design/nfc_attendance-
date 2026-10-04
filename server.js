@@ -72,7 +72,7 @@ let db = loadDatabase();
 let lastTapTimestamp = 0;
 let lastTappedRoll = "";
 
-// 1. GET Current Roster & Summary
+// 1. GET Current Roster & Ledger State
 app.get('/api/roster', (req, res) => {
   const presentCount = db.roster.filter(s => s.present).length;
   res.json({
@@ -86,18 +86,18 @@ app.get('/api/roster', (req, res) => {
   });
 });
 
-// 2. POST NFC Tap (With Anti-Proxy Debounce & Late Detection)
+// 2. POST NFC Tap (Debounce Guard & Late Attendance Logic)
 app.post('/api/attendance', (req, res) => {
   const { roll, isLate } = req.body;
   const now = Date.now();
 
   if (!roll) return res.status(400).json({ success: false, message: "Roll number required." });
 
-  // Anti-Proxy Check: Prevent multiple distinct cards swiping under 3 seconds
+  // Anti-Proxy Check: Prevent separate physical card taps within 3 seconds
   if (now - lastTapTimestamp < 3000 && lastTappedRoll !== roll) {
     return res.status(429).json({
       success: false,
-      message: "ANTI-PROXY ALERT: Rapid successive scans detected. 3-second delay required between different student cards."
+      message: "ANTI-PROXY ALERT: Rapid successive scans detected. Enforcing 3-second delay between student cards."
     });
   }
 
@@ -179,25 +179,25 @@ app.post('/api/save-session', (req, res) => {
 
   res.json({
     success: true,
-    message: `Lecture session committed to official ledger. Total lectures conducted: ${db.totalLecturesConducted}`,
+    message: `Session for slot [${slot}] committed to official ledger. Total lectures conducted: ${db.totalLecturesConducted}`,
     totalLecturesConducted: db.totalLecturesConducted,
     roster: db.roster
   });
 });
 
-// 4. POST Reset Database
+// 4. POST Reset Entire Database
 app.post('/api/reset', (req, res) => {
   if (fs.existsSync(DB_FILE)) {
     try { fs.unlinkSync(DB_FILE); } catch (e) {}
   }
   db = loadDatabase();
-  res.json({ success: true, message: "Attendance database wiped and reset to zero." });
+  res.json({ success: true, message: "Attendance ledger cleared and reset to initial state." });
 });
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.listen(PORT, () => console.log(`SXC Terminal Server live on port ${PORT}`));
+app.listen(PORT, () => console.log(`Attendance Engine online on port ${PORT}`));
 
 module.exports = app;
