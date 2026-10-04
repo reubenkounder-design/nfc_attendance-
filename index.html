@@ -88,7 +88,7 @@
     .tag-late { background: var(--warning-bg); color: var(--warning); }
     .tag-absent { background: var(--danger-bg); color: var(--danger); }
 
-    /* Floating Action Dock */
+    /* Action Dock */
     .action-dock {
       position: fixed; bottom: 0; left: 0; right: 0;
       background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
@@ -103,10 +103,10 @@
     button:active { transform: scale(0.97); }
     .btn-scan { background: var(--accent); color: #fff; }
     .btn-save { background: var(--success); color: #fff; }
-    .sub-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 12px; }
+    .sub-actions { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 6px; margin-top: 12px; }
     .btn-sub { padding: 10px 4px; background: var(--surface-elevated); color: var(--text-muted); border: 1px solid var(--border); font-size: 11px; }
 
-    /* Modal for NFC Tag Writer */
+    /* Modal */
     .modal-overlay {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.75);
       backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 200; padding: 16px;
@@ -155,7 +155,7 @@
     </section>
 
     <div id="statusMsg" class="feedback-banner">
-      Tap <strong>Activate Scanner</strong> to begin real-time student check-in.
+      Tap <strong>Activate Scanner</strong> on Android or use <strong>⚡ Demo Tap</strong> below.
     </div>
 
     <section class="card">
@@ -185,9 +185,10 @@
       </div>
 
       <div class="sub-actions">
-        <button class="btn-sub" onclick="openWriterModal()">Program NFC Tag</button>
+        <button class="btn-sub" onclick="simulateDemoTap()" style="color:#60a5fa; border-color: rgba(96, 165, 250, 0.35);">⚡ Demo Tap</button>
+        <button class="btn-sub" onclick="openWriterModal()">Program Card</button>
         <button class="btn-sub" onclick="exportAttendanceCSV()">Export Ledger</button>
-        <button class="btn-sub" onclick="resetAll()">Reset Session</button>
+        <button class="btn-sub" onclick="resetAll()">Reset</button>
       </div>
     </section>
   </div>
@@ -286,12 +287,46 @@
       const now = new Date();
       const lectureStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startH, startM, 0);
       const diffMinutes = (now - lectureStart) / 1000 / 60;
-      return diffMinutes > 15; // Marked LATE if tapped >15 minutes past start
+      return diffMinutes > 15;
+    }
+
+    async function recordStudentAttendance(roll) {
+      const isLate = checkIsLate();
+      try {
+        const res = await fetch('/api/attendance', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ roll, isLate })
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          setStatus(data.message, "var(--danger-bg)", "var(--danger)");
+          navigator.vibrate?.([60, 60, 60]);
+          return;
+        }
+
+        const match = roster.find(s => s.roll === roll);
+        if (match) {
+          match.present = true;
+          match.time = data.student.time;
+          match.isLate = data.student.isLate;
+        }
+
+        updateMetrics(data.stats.present, data.stats.absent, data.stats.turnout);
+        renderRoster();
+        playSuccessChime(isLate);
+        speak(`${data.student.name}, ${isLate ? 'Marked Late' : 'Present'}`);
+        setStatus(`Verified: ${data.student.roll} — ${data.student.name} ${isLate ? '(LATE)' : ''}`, "var(--success-bg)", "var(--success)");
+
+      } catch (err) {
+        setStatus(`Network issue: ${err.message}`, "var(--danger-bg)", "var(--danger)");
+      }
     }
 
     async function startNfcScanner() {
       if (!("NDEFReader" in window)) {
-        setStatus("Web NFC requires Google Chrome on Android over HTTPS.", "var(--danger-bg)", "var(--danger)");
+        setStatus("Web NFC requires Google Chrome on Android over HTTPS. (Use '⚡ Demo Tap' to test on Desktop/iOS)", "var(--danger-bg)", "var(--danger)");
         return;
       }
 
@@ -312,39 +347,16 @@
           scannedTag = scannedTag.trim().toUpperCase();
 
           let match = roster.find(s => scannedTag.includes(s.roll) || s.roll === scannedTag) || roster[0];
-          const isLate = checkIsLate();
-
-          try {
-            const res = await fetch('/api/attendance', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ roll: match.roll, isLate })
-            });
-            const data = await res.json();
-
-            if (!res.ok) {
-              setStatus(data.message, "var(--danger-bg)", "var(--danger)");
-              navigator.vibrate?.([60, 60, 60]);
-              return;
-            }
-
-            match.present = true;
-            match.time = data.student.time;
-            match.isLate = data.student.isLate;
-
-            updateMetrics(data.stats.present, data.stats.absent, data.stats.turnout);
-            renderRoster();
-            playSuccessChime(isLate);
-            speak(`${match.name}, ${isLate ? 'Marked Late' : 'Present'}`);
-            setStatus(`Verified: ${match.roll} — ${match.name} ${isLate ? '(LATE)' : ''}`, "var(--success-bg)", "var(--success)");
-
-          } catch (err) {
-            setStatus(`Network issue: ${err.message}`, "var(--danger-bg)", "var(--danger)");
-          }
+          await recordStudentAttendance(match.roll);
         };
       } catch (err) {
         setStatus(`Scanner initialization failed: ${err.message}`, "var(--danger-bg)", "var(--danger)");
       }
+    }
+
+    // Demo Mode: Allows Prof. Rahul to verify tap without hardware
+    function simulateDemoTap() {
+      recordStudentAttendance("FYIT-01");
     }
 
     async function executeNfcWrite() {
@@ -476,7 +488,7 @@
 
     function setStatus(msg, bg, color) {
       const box = document.getElementById("statusMsg");
-      box.innerHTML = msg;
+      box.innerText = msg;
       box.style.background = bg;
       box.style.color = color;
       box.style.borderColor = color;
