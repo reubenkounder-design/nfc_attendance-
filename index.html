@@ -3,128 +3,467 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Faculty NFC Terminal - SXC</title>
+  <title>Faculty NFC Terminal | St. Xavier's College</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background: #0f172a; margin: 0; padding: 12px; display: flex; flex-direction: column; align-items: center; color: #0f172a; }
-    .container { width: 100%; max-width: 650px; }
-    .card { background: #ffffff; border-radius: 14px; padding: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); margin-bottom: 12px; }
+    :root {
+      --bg: #090d16;
+      --surface: #131b2e;
+      --surface-elevated: #1a243d;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-focus: #3b82f6;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --success: #10b981;
+      --success-bg: rgba(16, 185, 129, 0.12);
+      --danger: #f43f5e;
+      --danger-bg: rgba(244, 63, 94, 0.12);
+      --warning: #f59e0b;
+      --warning-bg: rgba(245, 158, 11, 0.12);
+    }
 
-    .college-header { text-align: center; border-bottom: 2px solid #0f172a; padding-bottom: 8px; margin-bottom: 12px; }
-    .college-header h2 { margin: 0; font-size: 16px; color: #0f172a; text-transform: uppercase; }
-    .college-header p { margin: 2px 0; font-size: 11px; color: #475569; }
-    
-    .status-pill { display: inline-block; padding: 3px 8px; border-radius: 12px; background: #e0f2fe; color: #0369a1; font-size: 11px; font-weight: 700; margin-top: 4px; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-    .form-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
-    .form-row-2 { display: flex; gap: 8px; }
-    .form-row-2 > .form-group { flex: 1; }
-    .form-group { display: flex; flex-direction: column; width: 100%; }
-    label { font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px; text-transform: uppercase; }
-    select, input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; background: #ffffff; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      padding: 16px 12px 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
 
-    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 12px; }
-    .stat-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 4px; text-align: center; }
-    .stat-val { font-size: 18px; font-weight: 700; color: #0f172a; }
-    .stat-lbl { font-size: 9px; color: #64748b; font-weight: 700; text-transform: uppercase; margin-top: 2px; }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
 
-    .btn-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
-    button { width: 100%; padding: 12px; border: none; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.15s; }
-    .btn-nfc { background: #2563eb; color: #ffffff; box-shadow: 0 3px 10px rgba(37, 99, 235, 0.3); font-size: 15px; font-weight: 700; }
-    .btn-save { background: #059669; color: #ffffff; font-size: 14px; font-weight: 700; box-shadow: 0 3px 10px rgba(5, 150, 105, 0.25); }
-    .btn-sub-row { display: flex; gap: 8px; }
-    .btn-export { flex: 2; background: #475569; color: #ffffff; }
-    .btn-reset { flex: 1; background: #dc2626; color: #ffffff; }
-    
-    .status-msg { font-size: 12px; text-align: center; padding: 10px; border-radius: 8px; background: #e0e7ff; color: #3730a3; font-weight: 600; line-height: 1.4; border: 1px solid #c7d2fe; }
+    /* College Brand Header */
+    .brand-header {
+      background: linear-gradient(180deg, var(--surface) 0%, rgba(19, 27, 46, 0.6) 100%);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px 16px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
 
-    .table-container { overflow-x: auto; max-height: 380px; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid #e2e8f0; }
-    table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; }
-    th, td { padding: 9px 8px; text-align: center; border-bottom: 1px solid #e2e8f0; }
-    th { background: #0f172a; color: #ffffff; font-weight: 600; position: sticky; top: 0; z-index: 1; }
+    .brand-crest {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .brand-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 12px;
+      padding: 4px 10px;
+      border-radius: 99px;
+      background: rgba(37, 99, 235, 0.12);
+      color: #60a5fa;
+      font-size: 11px;
+      font-weight: 600;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #60a5fa;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    /* Cards */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 18px;
+    }
+
+    /* Lecture Session Form */
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    select, input {
+      width: 100%;
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: var(--text);
+      outline: none;
+      transition: border 0.15s ease;
+    }
+
+    select:focus, input:focus {
+      border-color: var(--border-focus);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    /* Live Analytics Grid */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .stat-card {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 6px;
+      text-align: center;
+    }
+
+    .stat-val {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .stat-lbl {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-top: 2px;
+    }
+
+    /* Notification / Feedback Banner */
+    .feedback-banner {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.4;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    /* Roster Table & Search */
+    .roster-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .roster-header h3 {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .search-input {
+      padding: 8px 12px;
+      font-size: 12px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      max-height: 400px;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    th {
+      background: #0f1627;
+      color: var(--text-muted);
+      font-weight: 600;
+      padding: 10px 12px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 12px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
     .text-left { text-align: left; }
-    .status-present { background: #dcfce7; color: #166534; font-weight: 700; padding: 4px 8px; border-radius: 4px; font-size: 11px; }
-    .status-absent { background: #fee2e2; color: #991b1b; font-weight: 700; padding: 4px 8px; border-radius: 4px; font-size: 11px; }
-    .row-present { background: #f0fdf4 !important; }
+
+    .tag {
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      display: inline-block;
+    }
+
+    .tag-present { background: var(--success-bg); color: var(--success); }
+    .tag-absent { background: var(--danger-bg); color: var(--danger); }
+
+    .pct-badge {
+      font-weight: 700;
+      font-size: 11px;
+    }
+
+    /* Floating Action Dock for Mobile */
+    .action-dock {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border);
+      padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+      display: flex;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .action-dock-inner {
+      width: 100%;
+      max-width: 600px;
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 10px;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.1s ease, background 0.15s ease;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    .btn-scan {
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn-save {
+      background: var(--success);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
+    }
+
+    .sub-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .btn-secondary {
+      flex: 1;
+      padding: 10px;
+      background: var(--surface-elevated);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      font-size: 11px;
+    }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <div class="card">
-      <div class="college-header">
-        <h2>St. Xavier's College, Mumbai</h2>
-        <p>B.Sc. (Information Technology) | Autonomous Faculty Desk</p>
-        <span class="status-pill" id="serverState">Ledger Engine: Active</span>
+    <!-- College Branding -->
+    <header class="brand-header">
+      <div class="brand-crest">Autonomous • Re-Accredited 'A+'</div>
+      <h1 class="brand-title">St. Xavier's College, Mumbai</h1>
+      <p class="brand-subtitle">Department of Information Technology | Smart NFC Terminal</p>
+      <div class="status-badge" id="serverState">
+        <span class="status-dot"></span>
+        <span>Database Engine Connected</span>
+      </div>
+    </header>
+
+    <!-- Session Configuration Card -->
+    <section class="card">
+      <div class="form-group">
+        <label>Course & Subject</label>
+        <select id="subjectSelect">
+          <option>COMPUTER NETWORK (Theory) - USITY4501SE2</option>
+          <option>APPLIED MATHEMATICS (Theory) - USITY4501CR2</option>
+          <option>THE ART OF PROGRAMMING (Theory) - USITY4501VS1</option>
+          <option>THE ART OF PROGRAMMING PRACTICAL - USITY4501VS1PR</option>
+          <option>FUNDAMENTALS OF MANAGEMENT - UCMGS4501MN1</option>
+        </select>
       </div>
 
-      <div class="form-grid">
+      <div class="form-row">
         <div class="form-group">
-          <label>Subject</label>
-          <select id="subjectSelect">
-            <option>COMPUTER NETWORK (Theory) - USITY4501SE2</option>
-            <option>APPLIED MATHEMATICS (Theory) - USITY4501CR2</option>
-            <option>THE ART OF PROGRAMMING (Theory) - USITY4501VS1</option>
-            <option>THE ART OF PROGRAMMING PRACTICAL - USITY4501VS1PR</option>
-            <option>FUNDAMENTALS OF MANAGEMENT - UCMGS4501MN1</option>
+          <label>Lecture Date</label>
+          <input type="date" id="lectureDate" />
+        </div>
+        <div class="form-group">
+          <label>Time Slot</label>
+          <select id="timeSlot">
+            <option>08:00 - 09:00 AM</option>
+            <option>09:00 - 10:00 AM</option>
+            <option selected>10:00 - 11:00 AM</option>
+            <option>11:00 - 12:00 PM</option>
+            <option>12:30 - 01:30 PM</option>
           </select>
         </div>
-
-        <div class="form-row-2">
-          <div class="form-group">
-            <label>Date</label>
-            <input type="date" id="lectureDate" />
-          </div>
-          <div class="form-group">
-            <label>Time Slot</label>
-            <select id="timeSlot">
-              <option>08:00 - 09:00 AM</option>
-              <option>09:00 - 10:00 AM</option>
-              <option selected>10:00 - 11:00 AM</option>
-              <option>11:00 - 12:00 PM</option>
-              <option>12:30 - 01:30 PM</option>
-            </select>
-          </div>
-        </div>
       </div>
+    </section>
 
-      <div class="stats-grid">
-        <div class="stat-box"><div class="stat-val" id="statStrength">64</div><div class="stat-lbl">Class</div></div>
-        <div class="stat-box"><div class="stat-val" id="statPresent" style="color:#16a34a;">0</div><div class="stat-lbl">Present</div></div>
-        <div class="stat-box"><div class="stat-val" id="statAbsent" style="color:#dc2626;">64</div><div class="stat-lbl">Absent</div></div>
-        <div class="stat-box"><div class="stat-val" id="statPercent">0%</div><div class="stat-lbl">Turnout</div></div>
+    <!-- Metrics Dashboard -->
+    <section class="stats-row">
+      <div class="stat-card">
+        <div class="stat-val" id="statStrength">64</div>
+        <div class="stat-lbl">Class</div>
       </div>
-
-      <div class="btn-row">
-        <button class="btn-nfc" onclick="startNfcScanner()">Activate Web NFC Scanner</button>
-        <button class="btn-save" onclick="saveSessionToLedger()">Save & Commit Attendance to Database</button>
-        <div class="btn-sub-row">
-          <button class="btn-export" onclick="exportAttendanceCSV()">Export CSV</button>
-          <button class="btn-reset" onclick="resetAll()">Reset All</button>
-        </div>
+      <div class="stat-card">
+        <div class="stat-val" id="statPresent" style="color: var(--success);">0</div>
+        <div class="stat-lbl">Present</div>
       </div>
+      <div class="stat-card">
+        <div class="stat-val" id="statAbsent" style="color: var(--danger);">64</div>
+        <div class="stat-lbl">Absent</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="statPercent">0%</div>
+        <div class="stat-lbl">Turnout</div>
+      </div>
+    </section>
 
-      <div id="statusMsg" class="status-msg">Scan student tags, then click 'Save & Commit Attendance' to permanently update records.</div>
+    <!-- Real-time Status / Feedback -->
+    <div id="statusMsg" class="feedback-banner">
+      Tap <strong>Activate NFC Terminal</strong> below and scan student ID tags.
     </div>
 
-    <div class="card" style="padding: 12px;">
-      <h3 style="margin: 0 0 10px 0; font-size: 13px;">Class Ledger & Attendance Percentage</h3>
+    <!-- Student Attendance Ledger -->
+    <section class="card">
+      <div class="roster-header">
+        <h3>Class Attendance Ledger</h3>
+        <span style="font-size: 11px; color: var(--text-muted);">64 Registered</span>
+      </div>
+
+      <input type="text" id="rosterSearch" class="search-input" placeholder="Quick search roll or student name..." oninput="renderRoster()" />
+
       <div class="table-container">
         <table>
           <thead>
             <tr>
               <th>Roll</th>
               <th class="text-left">Student Name</th>
-              <th>Current Tap</th>
+              <th>Status</th>
               <th>Attended / Total</th>
-              <th>Aggregate %</th>
+              <th>Aggregate</th>
             </tr>
           </thead>
           <tbody id="rosterTableBody"></tbody>
         </table>
       </div>
-    </div>
+
+      <div class="sub-actions">
+        <button class="btn-secondary" onclick="exportAttendanceCSV()">Download CSV</button>
+        <button class="btn-secondary" onclick="resetAll()">Reset Session</button>
+      </div>
+    </section>
   </div>
+
+  <!-- Mobile Floating Control Dock -->
+  <aside class="action-dock">
+    <div class="action-dock-inner">
+      <button class="btn-scan" onclick="startNfcScanner()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+        Activate NFC
+      </button>
+      <button class="btn-save" onclick="saveSessionToLedger()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Save Session
+      </button>
+    </div>
+  </aside>
 
   <script>
     let roster = [];
@@ -141,7 +480,7 @@
           renderRoster();
         }
       } catch (e) {
-        document.getElementById("serverState").innerText = "Offline Mode";
+        document.getElementById("serverState").innerHTML = `<span class="status-dot" style="background:#f43f5e"></span><span>Offline Mode</span>`;
       }
     }
 
@@ -152,12 +491,12 @@
         const gain = ctx.createGain();
         osc.type = "sine";
         osc.frequency.setValueAtTime(880, ctx.currentTime);
-        gain.gain.setValueAtTime(0.2, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+        gain.gain.setValueAtTime(0.18, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.22);
         osc.connect(gain);
         gain.connect(ctx.destination);
         osc.start();
-        osc.stop(ctx.currentTime + 0.2);
+        osc.stop(ctx.currentTime + 0.22);
       } catch (e) {}
     }
 
@@ -172,14 +511,14 @@
 
     async function startNfcScanner() {
       if (!("NDEFReader" in window)) {
-        setStatus("Web NFC requires Chrome on Android over HTTPS.", "#fee2e2", "#991b1b");
+        setStatus("Web NFC requires Google Chrome on Android with HTTPS.", "var(--danger-bg)", "var(--danger)");
         return;
       }
 
       try {
         const ndef = new NDEFReader();
         await ndef.scan();
-        setStatus("Ready! Hold student card to back of Android phone...", "#fef3c7", "#92400e");
+        setStatus("Ready! Hold student ID card to the back of the phone...", "var(--warning-bg)", "var(--warning)");
 
         ndef.onreading = async (event) => {
           let scannedTag = "";
@@ -203,7 +542,7 @@
             const data = await res.json();
 
             if (!res.ok) {
-              setStatus(data.message, "#fee2e2", "#991b1b");
+              setStatus(data.message, "var(--danger-bg)", "var(--danger)");
               return;
             }
 
@@ -213,14 +552,14 @@
             renderRoster();
             playSuccessChime();
             speakStudent(data.student.name);
-            setStatus(`Tap Verified: ${match.roll} - ${match.name}`, "#dcfce7", "#166534");
+            setStatus(`Verified: ${match.roll} — ${match.name}`, "var(--success-bg)", "var(--success)");
 
           } catch (err) {
-            setStatus(`Network error: ${err.message}`, "#fee2e2", "#991b1b");
+            setStatus(`Network issue: ${err.message}`, "var(--danger-bg)", "var(--danger)");
           }
         };
       } catch (err) {
-        setStatus(`Scan start failed: ${err.message}`, "#fee2e2", "#991b1b");
+        setStatus(`Scanner initialization failed: ${err.message}`, "var(--danger-bg)", "var(--danger)");
       }
     }
 
@@ -228,13 +567,11 @@
       const subject = document.getElementById("subjectSelect").value;
       const date = document.getElementById("lectureDate").value;
       const slot = document.getElementById("timeSlot").value;
-
       const presentCount = roster.filter(s => s.present).length;
-      if (!confirm(`Save lecture attendance for ${subject}?\n\nPresent: ${presentCount} / 64 students.`)) {
-        return;
-      }
 
-      setStatus("Saving session to backend database...", "#e0e7ff", "#3730a3");
+      if (!confirm(`Commit attendance for ${subject}?\n\nPresent: ${presentCount} / 64 students.`)) return;
+
+      setStatus("Committing lecture to server database...", "var(--warning-bg)", "var(--warning)");
 
       try {
         const res = await fetch('/api/save-session', {
@@ -242,39 +579,41 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ subject, date, slot })
         });
-
         const data = await res.json();
 
         if (data.success) {
           roster = data.roster;
           updateMetrics(0, 64, "0.0");
           renderRoster();
-          setStatus(`Lecture committed! Individual student records and percentages updated.`, "#dcfce7", "#166534");
-        } else {
-          setStatus("Failed to save session.", "#fee2e2", "#991b1b");
+          setStatus("Session archived! Individual attendance % updated.", "var(--success-bg)", "var(--success)");
         }
       } catch (err) {
-        setStatus(`Error saving session: ${err.message}`, "#fee2e2", "#991b1b");
+        setStatus(`Error saving session: ${err.message}`, "var(--danger-bg)", "var(--danger)");
       }
     }
 
     function renderRoster() {
       const tbody = document.getElementById("rosterTableBody");
       tbody.innerHTML = "";
+      const query = (document.getElementById("rosterSearch")?.value || "").toLowerCase();
 
       roster.forEach(s => {
-        const tr = document.createElement("tr");
-        if (s.present) tr.className = "row-present";
+        if (query && !s.roll.toLowerCase().includes(query) && !s.name.toLowerCase().includes(query)) return;
 
+        const tr = document.createElement("tr");
         const pct = s.attendancePercentage || 0;
-        const pctColor = pct < 75 ? "#dc2626" : "#166534";
+        const pctColor = pct < 75 ? "var(--danger)" : "var(--success)";
 
         tr.innerHTML = `
           <td><strong>${s.roll}</strong></td>
-          <td class="text-left" style="color:#2563eb; font-weight:600;">${s.name}</td>
-          <td><span class="${s.present ? 'status-present' : 'status-absent'}">${s.present ? 'PRESENT' : 'ABSENT'}</span></td>
-          <td><strong>${s.lecturesAttended || 0}</strong> / ${s.totalLectures || 0}</td>
-          <td style="color:${pctColor}; font-weight:700;">${pct}%</td>
+          <td class="text-left" style="font-weight: 500; color: #cbd5e1;">${s.name}</td>
+          <td>
+            <span class="tag ${s.present ? 'tag-present' : 'tag-absent'}">
+              ${s.present ? 'PRESENT' : 'ABSENT'}
+            </span>
+          </td>
+          <td style="color: var(--text-muted);">${s.lecturesAttended || 0} / ${s.totalLectures || 0}</td>
+          <td class="pct-badge" style="color: ${pctColor};">${pct}%</td>
         `;
         tbody.appendChild(tr);
       });
@@ -287,13 +626,12 @@
     }
 
     async function resetAll() {
-      if (confirm("Wipe entire database and reset all student histories to zero?")) {
-        const res = await fetch('/api/reset', { method: 'POST' });
-        const data = await res.json();
-        if (data.success) {
-          fetchRoster();
-          setStatus("Database reset. All statistics cleared.", "#e0e7ff", "#3730a3");
-        }
+      if (!confirm("Clear all session history and reset ledger to zero?")) return;
+      const res = await fetch('/api/reset', { method: 'POST' });
+      const data = await res.json();
+      if (data.success) {
+        fetchRoster();
+        setStatus("Session cleared. All counters reset.", "var(--surface-elevated)", "var(--text)");
       }
     }
 
@@ -308,7 +646,7 @@
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `SXC_Attendance_Ledger_${date}.csv`);
+      link.setAttribute("download", `SXC_Attendance_${date}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -316,9 +654,10 @@
 
     function setStatus(msg, bg, color) {
       const box = document.getElementById("statusMsg");
-      box.innerText = msg;
+      box.innerHTML = msg;
       box.style.background = bg;
       box.style.color = color;
+      box.style.borderColor = color;
     }
   </script>
 </body>
