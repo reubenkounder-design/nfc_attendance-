@@ -278,13 +278,34 @@
       } catch (e) {}
     }
 
+    // Natural Siri / Enhanced Assistant Voice Engine
     function speak(text) {
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const utter = new SpeechSynthesisUtterance(text);
-        utter.rate = 1.05;
-        window.speechSynthesis.speak(utter);
-      }
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+
+      const utter = new SpeechSynthesisUtterance(text);
+      const voices = window.speechSynthesis.getVoices();
+
+      // Prioritize natural Siri, Google Neural, or high-bitrate English voices
+      const naturalVoice = voices.find(v => 
+        v.name.includes("Siri") ||
+        v.name.includes("Samantha (Enhanced)") ||
+        v.name.includes("Karen (Enhanced)") ||
+        v.name.includes("Daniel (Enhanced)") ||
+        v.name.includes("Google US English") ||
+        v.name.includes("Google UK English Female") ||
+        (v.lang.startsWith("en") && !v.name.includes("Compact"))
+      );
+
+      if (naturalVoice) utter.voice = naturalVoice;
+      utter.rate = 1.0;
+      utter.pitch = 1.05;
+      utter.volume = 1.0;
+      window.speechSynthesis.speak(utter);
+    }
+
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
     }
 
     // Calculates late status using selected time slot start hour
