@@ -18,7 +18,7 @@ function loadDatabase() {
     try {
       return JSON.parse(fs.readFileSync(DB_FILE, 'utf-8'));
     } catch (e) {
-      console.error("Error reading database", e);
+      console.error("Database read error, reinitializing...", e);
     }
   }
 
@@ -28,6 +28,7 @@ function loadDatabase() {
     name: "Reuben Larasimonraj Kaundar",
     present: false,
     time: "-",
+    isLate: false,
     lecturesAttended: 0,
     totalLectures: 0,
     attendancePercentage: 0,
@@ -41,6 +42,7 @@ function loadDatabase() {
       name: `Student ${i}`,
       present: false,
       time: "-",
+      isLate: false,
       lecturesAttended: 0,
       totalLectures: 0,
       attendancePercentage: 0,
@@ -48,10 +50,10 @@ function loadDatabase() {
     });
   }
 
-  const initialData = { 
-    totalLecturesConducted: 0, 
-    roster: defaultRoster, 
-    savedSessions: [] 
+  const initialData = {
+    totalLecturesConducted: 0,
+    roster: defaultRoster,
+    savedSessions: []
   };
 
   try {
@@ -67,6 +69,8 @@ function saveDatabase(data) {
 }
 
 let db = loadDatabase();
+let lastTapTimestamp = 0;
+let lastTappedRoll = "";
 
 // 1. GET Current Roster & Summary
 app.get('/api/roster', (req, res) => {
@@ -82,27 +86,44 @@ app.get('/api/roster', (req, res) => {
   });
 });
 
-// 2. POST NFC Tap (Live Check-in)
+// 2. POST NFC Tap (With Anti-Proxy Debounce & Late Detection)
 app.post('/api/attendance', (req, res) => {
-  const { roll } = req.body;
+  const { roll, isLate } = req.body;
+  const now = Date.now();
+
   if (!roll) return res.status(400).json({ success: false, message: "Roll number required." });
 
-  const student = db.roster.find(s => s.roll.toUpperCase() === roll.toUpperCase());
-  if (!student) return res.status(404).json({ success: false, message: `Student ${roll} not found.` });
-
-  if (student.present) {
-    return res.status(409).json({ success: false, message: `${student.roll} is already marked PRESENT.` });
+  // Anti-Proxy Check: Prevent multiple distinct cards swiping under 3 seconds
+  if (now - lastTapTimestamp < 3000 && lastTappedRoll !== roll) {
+    return res.status(429).json({
+      success: false,
+      message: "ANTI-PROXY ALERT: Rapid successive scans detected. 3-second delay required between different student cards."
+    });
   }
 
-  const nowTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  const student = db.roster.find(s => s.roll.toUpperCase() === roll.toUpperCase());
+  if (!student) return res.status(404).json({ success: false, message: `Student ${roll} not recognized.` });
+
+  if (student.present) {
+    return res.status(409).json({
+      success: false,
+      message: `Duplicate Tap: ${student.roll} (${student.name}) is already marked PRESENT.`
+    });
+  }
+
+  const scanTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
   student.present = true;
-  student.time = nowTime;
+  student.time = scanTime;
+  student.isLate = Boolean(isLate);
+
+  lastTapTimestamp = now;
+  lastTappedRoll = roll;
   saveDatabase(db);
 
   const presentCount = db.roster.filter(s => s.present).length;
   res.status(201).json({
     success: true,
-    message: `Verified: ${student.roll} - ${student.name}`,
+    message: `Verified: ${student.roll} - ${student.name}${student.isLate ? " (LATE ENTRY)" : ""}`,
     student,
     stats: {
       total: TOTAL_STUDENTS,
@@ -113,10 +134,10 @@ app.post('/api/attendance', (req, res) => {
   });
 });
 
-// 3. POST Commit & Save Lecture Session (Permanent Ledger Update)
+// 3. POST Commit & Save Lecture Session
 app.post('/api/save-session', (req, res) => {
   const { subject, date, slot } = req.body;
-  
+
   db.totalLecturesConducted = (db.totalLecturesConducted || 0) + 1;
 
   const sessionSummary = {
@@ -130,7 +151,7 @@ app.post('/api/save-session', (req, res) => {
 
   db.roster.forEach(student => {
     student.totalLectures = db.totalLecturesConducted;
-    
+
     if (student.present) {
       student.lecturesAttended = (student.lecturesAttended || 0) + 1;
     }
@@ -141,16 +162,16 @@ app.post('/api/save-session', (req, res) => {
       subject,
       date,
       slot,
-      status: student.present ? "PRESENT" : "ABSENT",
+      status: student.present ? (student.isLate ? "LATE" : "PRESENT") : "ABSENT",
       timeIn: student.time
     };
 
     student.history.unshift(record);
     sessionSummary.attendanceRecords.push({ roll: student.roll, ...record });
 
-    // Reset temporary session flag for next lecture
     student.present = false;
     student.time = "-";
+    student.isLate = false;
   });
 
   db.savedSessions.unshift(sessionSummary);
@@ -158,25 +179,25 @@ app.post('/api/save-session', (req, res) => {
 
   res.json({
     success: true,
-    message: `Lecture session successfully archived to student profiles! Total lectures: ${db.totalLecturesConducted}`,
+    message: `Lecture session committed to official ledger. Total lectures conducted: ${db.totalLecturesConducted}`,
     totalLecturesConducted: db.totalLecturesConducted,
     roster: db.roster
   });
 });
 
-// 4. POST Reset Entire Database
+// 4. POST Reset Database
 app.post('/api/reset', (req, res) => {
   if (fs.existsSync(DB_FILE)) {
     try { fs.unlinkSync(DB_FILE); } catch (e) {}
   }
   db = loadDatabase();
-  res.json({ success: true, message: "All attendance history and ledger data reset." });
+  res.json({ success: true, message: "Attendance database wiped and reset to zero." });
 });
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.listen(PORT, () => console.log(`Attendance Engine live on ${PORT}`));
+app.listen(PORT, () => console.log(`SXC Terminal Server live on port ${PORT}`));
 
 module.exports = app;
