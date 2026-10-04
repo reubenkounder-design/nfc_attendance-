@@ -141,8 +141,15 @@
           <input type="date" id="lectureDate" />
         </div>
         <div class="form-group">
-          <label>Lecture Start Window</label>
-          <input type="time" id="lectureStartTime" value="10:00" />
+          <label>Lecture Time Slot</label>
+          <select id="lectureTimeSlot">
+            <option value="08:00">08:00 AM – 09:00 AM</option>
+            <option value="09:00">09:00 AM – 10:00 AM</option>
+            <option value="10:00" selected>10:00 AM – 11:00 AM</option>
+            <option value="11:00">11:00 AM – 12:00 PM</option>
+            <option value="12:30">12:30 PM – 01:30 PM</option>
+            <option value="13:30">01:30 PM – 02:30 PM</option>
+          </select>
         </div>
       </div>
     </section>
@@ -280,8 +287,10 @@
       }
     }
 
+    // Calculates late status using selected time slot start hour
     function checkIsLate() {
-      const startTimeVal = document.getElementById("lectureStartTime").value;
+      const slotSelect = document.getElementById("lectureTimeSlot");
+      const startTimeVal = slotSelect.value;
       if (!startTimeVal) return false;
       const [startH, startM] = startTimeVal.split(":").map(Number);
       const now = new Date();
@@ -354,7 +363,6 @@
       }
     }
 
-    // Demo Mode: Allows Prof. Rahul to verify tap without hardware
     function simulateDemoTap() {
       recordStudentAttendance("FYIT-01");
     }
@@ -394,16 +402,17 @@
     async function saveSessionToLedger() {
       const subject = document.getElementById("subjectSelect").value;
       const date = document.getElementById("lectureDate").value;
-      const slot = document.getElementById("lectureStartTime").value;
+      const slotSelect = document.getElementById("lectureTimeSlot");
+      const slotText = slotSelect.options[slotSelect.selectedIndex].text;
       const presentCount = roster.filter(s => s.present).length;
 
-      if (!confirm(`Commit attendance for ${subject}?\n\nPresent: ${presentCount} / 64 students.`)) return;
+      if (!confirm(`Commit attendance for ${subject}?\nTime: ${slotText}\n\nPresent: ${presentCount} / 64 students.`)) return;
 
       try {
         const res = await fetch('/api/save-session', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ subject, date, slot })
+          body: JSON.stringify({ subject, date, slot: slotText })
         });
         const data = await res.json();
         if (data.success) {
@@ -411,7 +420,7 @@
           document.getElementById("conductedCount").innerText = `Lectures: ${data.totalLecturesConducted}`;
           updateMetrics(0, 64, "0.0");
           renderRoster();
-          setStatus("Session finalized & ledger updated!", "var(--success-bg)", "var(--success)");
+          setStatus(`Session for [${slotText}] committed to ledger!`, "var(--success-bg)", "var(--success)");
         }
       } catch (err) {
         setStatus(`Save error: ${err.message}`, "var(--danger-bg)", "var(--danger)");
@@ -467,7 +476,11 @@
     function exportAttendanceCSV() {
       const sub = document.getElementById("subjectSelect").value;
       const date = document.getElementById("lectureDate").value;
-      let csv = `St. Xavier's College - Official Attendance Ledger\nDate: ${date}\nSubject: ${sub}\n\n`;
+      const slotSelect = document.getElementById("lectureTimeSlot");
+      const slotText = slotSelect.options[slotSelect.selectedIndex].text;
+
+      let csv = `St. Xavier's College (Autonomous), Mumbai - Official Attendance Ledger\n`;
+      csv += `Date: ${date}\nSubject: ${sub}\nLecture Time: ${slotText}\n\n`;
       csv += "Roll No,Student Name,Attended,Total Lectures,Percentage,Defaulter (<75%)\n";
 
       roster.forEach(s => {
@@ -488,7 +501,7 @@
 
     function setStatus(msg, bg, color) {
       const box = document.getElementById("statusMsg");
-      box.innerText = msg;
+      box.innerHTML = msg;
       box.style.background = bg;
       box.style.color = color;
       box.style.borderColor = color;
