@@ -17,7 +17,6 @@
       --text: #f8fafc;
       --text-muted: #94a3b8;
       --accent: #2563eb;
-      --accent-hover: #1d4ed8;
       --success: #10b981;
       --success-bg: rgba(16, 185, 129, 0.12);
       --danger: #f43f5e;
@@ -26,345 +25,105 @@
       --warning-bg: rgba(245, 158, 11, 0.12);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      -webkit-tap-highlight-color: transparent;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: var(--bg); color: var(--text); padding: 14px 12px 110px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+    .container { width: 100%; max-width: 620px; display: flex; flex-direction: column; gap: 14px; }
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      padding: 16px 12px 100px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 600px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    /* College Brand Header */
     .brand-header {
       background: linear-gradient(180deg, var(--surface) 0%, rgba(19, 27, 46, 0.6) 100%);
       border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 20px 16px;
+      border-radius: 18px;
+      padding: 16px;
       text-align: center;
       backdrop-filter: blur(10px);
     }
-
-    .brand-crest {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 6px;
-    }
-
-    .brand-title {
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-      color: var(--text);
-      margin-bottom: 4px;
-    }
-
-    .brand-subtitle {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
+    .brand-crest { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
+    .brand-title { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
+    .brand-subtitle { font-size: 11px; color: var(--text-muted); }
     .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 12px;
-      padding: 4px 10px;
-      border-radius: 99px;
-      background: rgba(37, 99, 235, 0.12);
-      color: #60a5fa;
-      font-size: 11px;
-      font-weight: 600;
-      border: 1px solid rgba(59, 130, 246, 0.2);
+      display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 3px 10px; border-radius: 99px;
+      background: rgba(37, 99, 235, 0.12); color: #60a5fa; font-size: 11px; font-weight: 600; border: 1px solid rgba(59, 130, 246, 0.2);
     }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #60a5fa; }
 
-    .status-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #60a5fa;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
-    }
-
-    /* Cards */
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 18px;
-    }
-
-    /* Lecture Session Form */
-    .form-group {
-      margin-bottom: 12px;
-    }
-
-    .form-group:last-child {
-      margin-bottom: 0;
-    }
-
-    label {
-      display: block;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 6px;
-    }
-
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 16px; }
+    .form-group { margin-bottom: 10px; }
+    .form-group:last-child { margin-bottom: 0; }
+    label { display: block; font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
     select, input {
-      width: 100%;
-      background: var(--surface-elevated);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px 14px;
-      font-size: 13px;
-      color: var(--text);
-      outline: none;
-      transition: border 0.15s ease;
+      width: 100%; background: var(--surface-elevated); border: 1px solid var(--border); border-radius: 10px;
+      padding: 11px 12px; font-size: 13px; color: var(--text); outline: none; transition: border 0.15s ease;
     }
+    select:focus, input:focus { border-color: var(--border-focus); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-    select:focus, input:focus {
-      border-color: var(--border-focus);
-    }
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .stat-card { background: var(--surface-elevated); border: 1px solid var(--border); border-radius: 12px; padding: 10px 4px; text-align: center; }
+    .stat-val { font-size: 19px; font-weight: 700; }
+    .stat-lbl { font-size: 9px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-top: 2px; }
 
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    /* Live Analytics Grid */
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-    }
-
-    .stat-card {
-      background: var(--surface-elevated);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 10px 6px;
-      text-align: center;
-    }
-
-    .stat-val {
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-    }
-
-    .stat-lbl {
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-      margin-top: 2px;
-    }
-
-    /* Notification / Feedback Banner */
     .feedback-banner {
-      background: var(--surface-elevated);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 12px 14px;
-      font-size: 12px;
-      font-weight: 500;
-      line-height: 1.4;
-      text-align: center;
-      transition: all 0.2s ease;
+      background: var(--surface-elevated); border: 1px solid var(--border); border-radius: 12px;
+      padding: 12px; font-size: 12px; font-weight: 500; line-height: 1.4; text-align: center;
     }
 
-    /* Roster Table & Search */
-    .roster-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
+    .roster-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .filter-pills { display: flex; gap: 6px; }
+    .pill {
+      font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 20px; border: 1px solid var(--border);
+      background: var(--surface-elevated); color: var(--text-muted); cursor: pointer;
     }
+    .pill.active { background: var(--danger-bg); color: var(--danger); border-color: var(--danger); }
 
-    .roster-header h3 {
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .search-input {
-      padding: 8px 12px;
-      font-size: 12px;
-      border-radius: 10px;
-      margin-bottom: 12px;
-    }
-
-    .table-container {
-      overflow-x: auto;
-      max-height: 400px;
-      -webkit-overflow-scrolling: touch;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12px;
-      white-space: nowrap;
-    }
-
+    .table-container { overflow-x: auto; max-height: 380px; -webkit-overflow-scrolling: touch; border-radius: 10px; border: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; white-space: nowrap; }
     th {
-      background: #0f1627;
-      color: var(--text-muted);
-      font-weight: 600;
-      padding: 10px 12px;
-      text-align: center;
-      position: sticky;
-      top: 0;
-      z-index: 2;
-      border-bottom: 1px solid var(--border);
+      background: #0f1627; color: var(--text-muted); font-weight: 600; padding: 10px;
+      text-align: center; position: sticky; top: 0; z-index: 2; border-bottom: 1px solid var(--border);
     }
-
-    td {
-      padding: 12px;
-      text-align: center;
-      border-bottom: 1px solid var(--border);
-      background: var(--surface);
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-    }
-
+    td { padding: 11px 10px; text-align: center; border-bottom: 1px solid var(--border); background: var(--surface); }
     .text-left { text-align: left; }
-
-    .tag {
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      display: inline-block;
-    }
-
+    .tag { padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; display: inline-block; }
     .tag-present { background: var(--success-bg); color: var(--success); }
+    .tag-late { background: var(--warning-bg); color: var(--warning); }
     .tag-absent { background: var(--danger-bg); color: var(--danger); }
 
-    .pct-badge {
-      font-weight: 700;
-      font-size: 11px;
-    }
-
-    /* Floating Action Dock for Mobile */
+    /* Floating Action Dock */
     .action-dock {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-top: 1px solid var(--border);
-      padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
-      display: flex;
-      justify-content: center;
-      z-index: 100;
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border-top: 1px solid var(--border); padding: 12px 14px calc(12px + env(safe-area-inset-bottom));
+      display: flex; justify-content: center; z-index: 100;
     }
-
-    .action-dock-inner {
-      width: 100%;
-      max-width: 600px;
-      display: grid;
-      grid-template-columns: 1.5fr 1fr;
-      gap: 10px;
-    }
-
+    .action-dock-inner { width: 100%; max-width: 620px; display: grid; grid-template-columns: 1.3fr 1fr; gap: 8px; }
     button {
-      border: none;
-      border-radius: 12px;
-      padding: 14px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: transform 0.1s ease, background 0.15s ease;
+      border: none; border-radius: 10px; padding: 13px; font-size: 13px; font-weight: 600; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 6px; transition: transform 0.1s ease;
     }
+    button:active { transform: scale(0.97); }
+    .btn-scan { background: var(--accent); color: #fff; }
+    .btn-save { background: var(--success); color: #fff; }
+    .sub-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 12px; }
+    .btn-sub { padding: 10px 4px; background: var(--surface-elevated); color: var(--text-muted); border: 1px solid var(--border); font-size: 11px; }
 
-    button:active {
-      transform: scale(0.97);
+    /* Modal for NFC Tag Writer */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 200; padding: 16px;
     }
-
-    .btn-scan {
-      background: var(--accent);
-      color: #ffffff;
-      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
-    }
-
-    .btn-save {
-      background: var(--success);
-      color: #ffffff;
-      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
-    }
-
-    .sub-actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 4px;
-    }
-
-    .btn-secondary {
-      flex: 1;
-      padding: 10px;
-      background: var(--surface-elevated);
-      color: var(--text-muted);
-      border: 1px solid var(--border);
-      font-size: 11px;
-    }
+    .modal-card { width: 100%; max-width: 420px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <!-- College Branding -->
     <header class="brand-header">
       <div class="brand-crest">Autonomous • Re-Accredited 'A+'</div>
       <h1 class="brand-title">St. Xavier's College, Mumbai</h1>
       <p class="brand-subtitle">Department of Information Technology | Smart NFC Terminal</p>
-      <div class="status-badge" id="serverState">
-        <span class="status-dot"></span>
-        <span>Database Engine Connected</span>
-      </div>
+      <div class="status-badge" id="serverState"><span class="status-dot"></span><span>Ledger Engine Online</span></div>
     </header>
 
-    <!-- Session Configuration Card -->
     <section class="card">
       <div class="form-group">
         <label>Course & Subject</label>
@@ -376,58 +135,39 @@
           <option>FUNDAMENTALS OF MANAGEMENT - UCMGS4501MN1</option>
         </select>
       </div>
-
       <div class="form-row">
         <div class="form-group">
           <label>Lecture Date</label>
           <input type="date" id="lectureDate" />
         </div>
         <div class="form-group">
-          <label>Time Slot</label>
-          <select id="timeSlot">
-            <option>08:00 - 09:00 AM</option>
-            <option>09:00 - 10:00 AM</option>
-            <option selected>10:00 - 11:00 AM</option>
-            <option>11:00 - 12:00 PM</option>
-            <option>12:30 - 01:30 PM</option>
-          </select>
+          <label>Lecture Start Window</label>
+          <input type="time" id="lectureStartTime" value="10:00" />
         </div>
       </div>
     </section>
 
-    <!-- Metrics Dashboard -->
     <section class="stats-row">
-      <div class="stat-card">
-        <div class="stat-val" id="statStrength">64</div>
-        <div class="stat-lbl">Class</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-val" id="statPresent" style="color: var(--success);">0</div>
-        <div class="stat-lbl">Present</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-val" id="statAbsent" style="color: var(--danger);">64</div>
-        <div class="stat-lbl">Absent</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-val" id="statPercent">0%</div>
-        <div class="stat-lbl">Turnout</div>
-      </div>
+      <div class="stat-card"><div class="stat-val" id="statStrength">64</div><div class="stat-lbl">Class</div></div>
+      <div class="stat-card"><div class="stat-val" id="statPresent" style="color:var(--success);">0</div><div class="stat-lbl">Present</div></div>
+      <div class="stat-card"><div class="stat-val" id="statAbsent" style="color:var(--danger);">64</div><div class="stat-lbl">Absent</div></div>
+      <div class="stat-card"><div class="stat-val" id="statPercent">0%</div><div class="stat-lbl">Turnout</div></div>
     </section>
 
-    <!-- Real-time Status / Feedback -->
     <div id="statusMsg" class="feedback-banner">
-      Tap <strong>Activate NFC Terminal</strong> below and scan student ID tags.
+      Tap <strong>Activate Scanner</strong> to begin real-time student check-in.
     </div>
 
-    <!-- Student Attendance Ledger -->
     <section class="card">
       <div class="roster-header">
-        <h3>Class Attendance Ledger</h3>
-        <span style="font-size: 11px; color: var(--text-muted);">64 Registered</span>
+        <div class="filter-pills">
+          <div class="pill" id="filterAll" onclick="setFilter('all')">All (64)</div>
+          <div class="pill" id="filterDefaulters" onclick="setFilter('defaulters')">Defaulters (&lt;75%)</div>
+        </div>
+        <span style="font-size: 11px; color: var(--text-muted);" id="conductedCount">Lectures: 0</span>
       </div>
 
-      <input type="text" id="rosterSearch" class="search-input" placeholder="Quick search roll or student name..." oninput="renderRoster()" />
+      <input type="text" id="rosterSearch" placeholder="Search Roll or Name..." oninput="renderRoster()" style="margin-bottom:10px; font-size:12px; padding:8px 10px;" />
 
       <div class="table-container">
         <table>
@@ -445,29 +185,49 @@
       </div>
 
       <div class="sub-actions">
-        <button class="btn-secondary" onclick="exportAttendanceCSV()">Download CSV</button>
-        <button class="btn-secondary" onclick="resetAll()">Reset Session</button>
+        <button class="btn-sub" onclick="openWriterModal()">Program NFC Tag</button>
+        <button class="btn-sub" onclick="exportAttendanceCSV()">Export Ledger</button>
+        <button class="btn-sub" onclick="resetAll()">Reset Session</button>
       </div>
     </section>
   </div>
 
-  <!-- Mobile Floating Control Dock -->
   <aside class="action-dock">
     <div class="action-dock-inner">
       <button class="btn-scan" onclick="startNfcScanner()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-        Activate NFC
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+        Activate Scanner
       </button>
       <button class="btn-save" onclick="saveSessionToLedger()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        Save Session
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="20 6 9 17 4 12"/></svg>
+        Commit Session
       </button>
     </div>
   </aside>
 
+  <!-- Tag Writer Modal -->
+  <div class="modal-overlay" id="writerModal">
+    <div class="modal-card">
+      <h3 style="margin-bottom: 8px; font-size: 15px;">Admin: Program NTAG213 Card</h3>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Select student roll number, then tap a blank NFC sticker against this phone to encode it.</p>
+      
+      <div class="form-group">
+        <label>Assign Student Roll</label>
+        <select id="writerRollSelect"></select>
+      </div>
+
+      <div style="display:flex; gap:8px; margin-top:14px;">
+        <button class="btn-scan" style="flex:1;" onclick="executeNfcWrite()">Write to Card</button>
+        <button class="btn-sub" style="flex:1;" onclick="closeWriterModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     let roster = [];
+    let activeFilter = 'all';
     document.getElementById("lectureDate").valueAsDate = new Date();
+    setFilter('all');
     fetchRoster();
 
     async function fetchRoster() {
@@ -476,21 +236,31 @@
         const data = await res.json();
         if (data.success) {
           roster = data.roster;
+          document.getElementById("conductedCount").innerText = `Lectures: ${data.totalLecturesConducted}`;
           updateMetrics(data.present, data.absent, data.turnout);
+          populateWriterDropdown();
           renderRoster();
         }
       } catch (e) {
-        document.getElementById("serverState").innerHTML = `<span class="status-dot" style="background:#f43f5e"></span><span>Offline Mode</span>`;
+        document.getElementById("serverState").innerText = "Offline Mode";
       }
     }
 
-    function playSuccessChime() {
+    function setFilter(type) {
+      activeFilter = type;
+      document.getElementById("filterAll").className = `pill ${type === 'all' ? 'active' : ''}`;
+      document.getElementById("filterDefaulters").className = `pill ${type === 'defaulters' ? 'active' : ''}`;
+      renderRoster();
+    }
+
+    function playSuccessChime(isLate) {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = "sine";
-        osc.frequency.setValueAtTime(880, ctx.currentTime);
+        osc.frequency.setValueAtTime(isLate ? 520 : 880, ctx.currentTime);
+        if (!isLate) osc.frequency.setValueAtTime(1174.66, ctx.currentTime + 0.08);
         gain.gain.setValueAtTime(0.18, ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.22);
         osc.connect(gain);
@@ -500,18 +270,28 @@
       } catch (e) {}
     }
 
-    function speakStudent(name) {
+    function speak(text) {
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
-        const utter = new SpeechSynthesisUtterance(`${name}, Present`);
+        const utter = new SpeechSynthesisUtterance(text);
         utter.rate = 1.05;
         window.speechSynthesis.speak(utter);
       }
     }
 
+    function checkIsLate() {
+      const startTimeVal = document.getElementById("lectureStartTime").value;
+      if (!startTimeVal) return false;
+      const [startH, startM] = startTimeVal.split(":").map(Number);
+      const now = new Date();
+      const lectureStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startH, startM, 0);
+      const diffMinutes = (now - lectureStart) / 1000 / 60;
+      return diffMinutes > 15; // Marked LATE if tapped >15 minutes past start
+    }
+
     async function startNfcScanner() {
       if (!("NDEFReader" in window)) {
-        setStatus("Web NFC requires Google Chrome on Android with HTTPS.", "var(--danger-bg)", "var(--danger)");
+        setStatus("Web NFC requires Google Chrome on Android over HTTPS.", "var(--danger-bg)", "var(--danger)");
         return;
       }
 
@@ -532,27 +312,31 @@
           scannedTag = scannedTag.trim().toUpperCase();
 
           let match = roster.find(s => scannedTag.includes(s.roll) || s.roll === scannedTag) || roster[0];
+          const isLate = checkIsLate();
 
           try {
             const res = await fetch('/api/attendance', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ roll: match.roll })
+              body: JSON.stringify({ roll: match.roll, isLate })
             });
             const data = await res.json();
 
             if (!res.ok) {
               setStatus(data.message, "var(--danger-bg)", "var(--danger)");
+              navigator.vibrate?.([60, 60, 60]);
               return;
             }
 
             match.present = true;
             match.time = data.student.time;
+            match.isLate = data.student.isLate;
+
             updateMetrics(data.stats.present, data.stats.absent, data.stats.turnout);
             renderRoster();
-            playSuccessChime();
-            speakStudent(data.student.name);
-            setStatus(`Verified: ${match.roll} — ${match.name}`, "var(--success-bg)", "var(--success)");
+            playSuccessChime(isLate);
+            speak(`${match.name}, ${isLate ? 'Marked Late' : 'Present'}`);
+            setStatus(`Verified: ${match.roll} — ${match.name} ${isLate ? '(LATE)' : ''}`, "var(--success-bg)", "var(--success)");
 
           } catch (err) {
             setStatus(`Network issue: ${err.message}`, "var(--danger-bg)", "var(--danger)");
@@ -563,15 +347,45 @@
       }
     }
 
+    async function executeNfcWrite() {
+      if (!("NDEFReader" in window)) {
+        alert("Web NFC writer requires Chrome on Android.");
+        return;
+      }
+      const targetRoll = document.getElementById("writerRollSelect").value;
+      try {
+        const ndef = new NDEFReader();
+        setStatus(`Hold blank NFC card to phone to write: ${targetRoll}...`, "var(--warning-bg)", "var(--warning)");
+        closeWriterModal();
+        await ndef.write({ records: [{ recordType: "text", data: targetRoll }] });
+        setStatus(`Successfully encoded card with ${targetRoll}!`, "var(--success-bg)", "var(--success)");
+        speak("Tag Programmed Successfully");
+      } catch (err) {
+        setStatus(`Tag write failed: ${err.message}`, "var(--danger-bg)", "var(--danger)");
+      }
+    }
+
+    function openWriterModal() { document.getElementById("writerModal").style.display = "flex"; }
+    function closeWriterModal() { document.getElementById("writerModal").style.display = "none"; }
+
+    function populateWriterDropdown() {
+      const select = document.getElementById("writerRollSelect");
+      select.innerHTML = "";
+      roster.forEach(s => {
+        const opt = document.createElement("option");
+        opt.value = s.roll;
+        opt.textContent = `${s.roll} - ${s.name}`;
+        select.appendChild(opt);
+      });
+    }
+
     async function saveSessionToLedger() {
       const subject = document.getElementById("subjectSelect").value;
       const date = document.getElementById("lectureDate").value;
-      const slot = document.getElementById("timeSlot").value;
+      const slot = document.getElementById("lectureStartTime").value;
       const presentCount = roster.filter(s => s.present).length;
 
       if (!confirm(`Commit attendance for ${subject}?\n\nPresent: ${presentCount} / 64 students.`)) return;
-
-      setStatus("Committing lecture to server database...", "var(--warning-bg)", "var(--warning)");
 
       try {
         const res = await fetch('/api/save-session', {
@@ -580,15 +394,15 @@
           body: JSON.stringify({ subject, date, slot })
         });
         const data = await res.json();
-
         if (data.success) {
           roster = data.roster;
+          document.getElementById("conductedCount").innerText = `Lectures: ${data.totalLecturesConducted}`;
           updateMetrics(0, 64, "0.0");
           renderRoster();
-          setStatus("Session archived! Individual attendance % updated.", "var(--success-bg)", "var(--success)");
+          setStatus("Session finalized & ledger updated!", "var(--success-bg)", "var(--success)");
         }
       } catch (err) {
-        setStatus(`Error saving session: ${err.message}`, "var(--danger-bg)", "var(--danger)");
+        setStatus(`Save error: ${err.message}`, "var(--danger-bg)", "var(--danger)");
       }
     }
 
@@ -598,22 +412,25 @@
       const query = (document.getElementById("rosterSearch")?.value || "").toLowerCase();
 
       roster.forEach(s => {
+        const pct = s.attendancePercentage || 0;
+        if (activeFilter === 'defaulters' && (pct >= 75 || s.totalLectures === 0)) return;
         if (query && !s.roll.toLowerCase().includes(query) && !s.name.toLowerCase().includes(query)) return;
 
         const tr = document.createElement("tr");
-        const pct = s.attendancePercentage || 0;
         const pctColor = pct < 75 ? "var(--danger)" : "var(--success)";
+        let statusTag = `<span class="tag tag-absent">ABSENT</span>`;
+        if (s.present) {
+          statusTag = s.isLate 
+            ? `<span class="tag tag-late">LATE (${s.time})</span>` 
+            : `<span class="tag tag-present">PRESENT (${s.time})</span>`;
+        }
 
         tr.innerHTML = `
           <td><strong>${s.roll}</strong></td>
-          <td class="text-left" style="font-weight: 500; color: #cbd5e1;">${s.name}</td>
-          <td>
-            <span class="tag ${s.present ? 'tag-present' : 'tag-absent'}">
-              ${s.present ? 'PRESENT' : 'ABSENT'}
-            </span>
-          </td>
+          <td class="text-left" style="color: #cbd5e1;">${s.name}</td>
+          <td>${statusTag}</td>
           <td style="color: var(--text-muted);">${s.lecturesAttended || 0} / ${s.totalLectures || 0}</td>
-          <td class="pct-badge" style="color: ${pctColor};">${pct}%</td>
+          <td style="color: ${pctColor}; font-weight: 700;">${pct}%</td>
         `;
         tbody.appendChild(tr);
       });
@@ -626,27 +443,32 @@
     }
 
     async function resetAll() {
-      if (!confirm("Clear all session history and reset ledger to zero?")) return;
+      if (!confirm("Clear all session history and reset entire attendance ledger to zero?")) return;
       const res = await fetch('/api/reset', { method: 'POST' });
       const data = await res.json();
       if (data.success) {
         fetchRoster();
-        setStatus("Session cleared. All counters reset.", "var(--surface-elevated)", "var(--text)");
+        setStatus("Ledger completely wiped and reset.", "var(--surface-elevated)", "var(--text)");
       }
     }
 
     function exportAttendanceCSV() {
       const sub = document.getElementById("subjectSelect").value;
       const date = document.getElementById("lectureDate").value;
-      let csv = `Date,${date}\nSubject,${sub}\n\nRoll No,Student Name,Lectures Attended,Total Lectures,Percentage\n`;
+      let csv = `St. Xavier's College - Official Attendance Ledger\nDate: ${date}\nSubject: ${sub}\n\n`;
+      csv += "Roll No,Student Name,Attended,Total Lectures,Percentage,Defaulter (<75%)\n";
+
       roster.forEach(s => {
-        csv += `"${s.roll}","${s.name}",${s.lecturesAttended || 0},${s.totalLectures || 0},${s.attendancePercentage || 0}%\n`;
+        const pct = s.attendancePercentage || 0;
+        const isDefaulter = pct < 75 ? "YES" : "NO";
+        csv += `"${s.roll}","${s.name}",${s.lecturesAttended || 0},${s.totalLectures || 0},${pct}%,${isDefaulter}\n`;
       });
+
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `SXC_Attendance_${date}.csv`);
+      link.setAttribute("download", `SXC_Ledger_${date}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
