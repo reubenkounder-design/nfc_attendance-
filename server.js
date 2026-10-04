@@ -25,7 +25,7 @@ function loadDatabase() {
   const defaultRoster = [];
   defaultRoster.push({
     roll: "FYIT-01",
-    name: "Reuben Larasimonraj Kaundar",
+    name: "Reuben Lara",
     present: false,
     time: "-",
     isLate: false,
